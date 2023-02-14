@@ -1,5 +1,5 @@
 import axios from "axios";
-const url = "https://backendwebtrasualaravel-production-6fb6.up.railway.app";
+const url = "";
 const request = axios.create({
   baseURL: url + "/api",
   headers: {
