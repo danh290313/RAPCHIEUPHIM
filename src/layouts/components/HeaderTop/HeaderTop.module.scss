@@ -1,0 +1,29 @@
+.wrapper {
+    display: flex;
+    list-style-type: none;
+    flex-direction: row;
+    justify-content: end;
+    margin-right: 150px;
+}
+.content-detail {
+    margin-right: 50px;
+}
+.icon-dangnhap {
+    border-radius: 2px;
+    border-color: black;
+}
+.dangnhap {
+}
+
+.wrapper img {
+    width: 1em;
+    height: 1em;
+    margin-left: 5px;
+}
+.content-detail {
+    text-transform: uppercase;
+    font-family: Verdana, Arial, sans-serif;
+    color: rgb(60, 60, 60);
+    font-size: 14px;
+    line-height: 18px;
+}

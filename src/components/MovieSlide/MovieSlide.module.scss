@@ -1,0 +1,31 @@
+.img-event {
+    display: block;
+    height: 350px;
+    width: 250px;
+    object-fit: cover;
+}
+.img-event2:hover .button-play {
+    background: url(https://www.cgv.vn/skin/frontend/cgv/default/images/bg-transparent-grey.png) no-repeat scroll 0 0
+        transparent;
+    height: 355px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 250px;
+    text-indent: -99999px;
+    display: block;
+    cursor: pointer;
+}
+
+.feature-film {
+    z-index: -1;
+    width: 250px;
+    position: absolute;
+    top: 270px;
+}
+
+.img-event2:hover .feature-film {
+    
+    z-index: 999;
+}
+

@@ -1,0 +1,37 @@
+.wrapperMenu {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    margin-left: 100px;
+    margin-right: 100px;
+    padding-left: 0;
+}
+.wrapperMenu li {
+    background-image: url('https://www.cgv.vn/skin/frontend/cgv/default/images/bg-cgv/bg-header-transparent-home.png');
+    display: block;
+    height: 90px;
+    text-indent: -9999px;
+    width: 139px;
+}
+
+.theater {
+    background-position: 10px 0;
+}
+.now-sh {
+    background-position: -140px 0;
+}
+.special {
+    background-position: -280px 0;
+}
+.event {
+    background-position: -420px 0;
+}
+.ticket {
+    background-position: -560px 0;
+}
+.dc {
+    background-position: -700px 0;
+}
+.login-header {
+    background-position: -830px 0;
+}

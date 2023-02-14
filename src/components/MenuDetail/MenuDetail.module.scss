@@ -1,0 +1,33 @@
+.icon {
+    margin-left: 50px;
+}
+.Menu {
+    background-image: url('https://www.cgv.vn/skin/frontend/cgv/default/images/bg-cgv/bg_menu_hover.png');
+    width: 2px;
+    border: 1.4px solid;
+    border-image: radial-gradient(rgb(65, 65, 43), rgb(37, 37, 101)) 10;
+    border-image-outset: 1.5; /* 1.5 × 1.4rem = 2.1rem */
+}
+.icon-item {
+    opacity: 0;
+    margin-left: 20px;
+}
+.item {
+    border-bottom: none;
+    padding: 0 35px 0 10px;
+    color: #fff;
+    display: block;
+    font-family: Verdana, Arial, sans-serif;
+    font-weight: bold;
+    line-height: 30px;
+    position: relative;
+    text-decoration: none;
+    text-transform: capitalize;
+
+    &:hover {
+        color: red;
+        .icon-item {
+            opacity: 1;
+        }
+    }
+}

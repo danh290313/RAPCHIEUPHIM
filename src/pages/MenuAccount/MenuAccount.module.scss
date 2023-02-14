@@ -1,0 +1,16 @@
+.swapper{
+    display: flex;
+    margin: 1% 20%;
+    
+}
+.sidebar {
+    flex: 1;
+    border-right: black solid;
+    &:active {
+       
+        background-color: red;
+      }
+}
+.body {
+    flex: 3;
+}

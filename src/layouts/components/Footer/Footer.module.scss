@@ -1,0 +1,45 @@
+.foot-next {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+.foot-detail-label {
+    font-weight: bold;
+}
+.foot {
+    position: relative;
+    border-top: black solid;
+    border-bottom: black solid;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.followUs2 {
+    display: flex;
+    flex-direction: row;
+}
+.followUs ul li {
+    background: url(https://www.cgv.vn/skin/frontend/cgv/default/images/bg-cgv/bg-social-footer-40.png) repeat scroll 0
+        0 rgba(0, 0, 0, 0);
+    display: block;
+    height: 39px;
+    text-indent: -9999px;
+    width: 41px;
+}
+
+.followUs ul li.follow-fb {
+    background-position: -9px -3px;
+}
+.followUs ul li.follow-yt {
+    background-position: -54px -3px;
+}
+.followUs ul li.follow-line {
+    background-position: -145px -3px;
+}
+.followUs ul li.follow-instagram {
+    background-position: -98px -3px;
+}
+.followUs ul li.follow-zalo {
+    background-position: -191px -3px;
+}
+

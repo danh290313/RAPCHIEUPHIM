@@ -1,0 +1,19 @@
+.img-event {
+    display: block;
+    height: 350px;
+    width: 240px;
+    object-fit: cover;
+}
+
+.button-play {
+    background: url(https://www.cgv.vn/skin/frontend/cgv/default/images/bg-transparent-grey.png) no-repeat scroll 0 0
+        transparent;
+    height: 355px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 240px;
+    text-indent: -99999px;
+    display: block;
+    cursor: pointer;
+}

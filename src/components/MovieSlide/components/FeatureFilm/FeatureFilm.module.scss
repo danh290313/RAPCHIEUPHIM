@@ -1,0 +1,28 @@
+.wrapper {
+    background-color: black;
+    opacity: 0.8;
+    color: white;  
+    text-transform: uppercase;
+    min-height: 100px;
+}
+.name {
+       margin-bottom: 10px;
+}
+.feature {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.detail-sticker {
+    background-color: red;
+    font-size: 100%;
+    padding: 5px;
+    border-radius: 2px;
+}
+.buy-sticker {
+    background-color: red;
+    font-size: 100%;
+    padding: 5px;
+    border-radius: 2px;
+
+}

@@ -1,0 +1,22 @@
+.input {
+  border: 1px solid #333;
+  padding: 5px 10px;
+  line-height: 30px;
+  width: 100%;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  &:focus {
+    border: 2px solid var(--primary);
+  }
+}
+.invalid {
+  margin-bottom: 0px;
+  border-color: red !important;
+}
+.error {
+  color: red;
+  font-size: 0.9rem;
+}
+Label {
+  font-weight: bolder;
+}
