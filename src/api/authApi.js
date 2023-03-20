@@ -1,0 +1,35 @@
+import axiosClient from './axiosClient';
+
+const authApi = {
+    login: (data) => {
+        const url = '/login';
+        return axiosClient.post(url, data);
+    },
+
+    register: (data) => {
+        const url = '/register';
+        return axiosClient.post(url, data);
+    },
+
+    getUserInfo: (userId, token) => {
+        const url = 'api/customer?userId=';
+        return axiosClient.get(url + userId, { headers: { Authorization: 'Bearer ' + token } });
+    },
+
+    updateUserInfo: (id, formData, token) => {
+        const url = 'api/customer/';
+        return axiosClient.put(url + id, formData, { headers: { Authorization: 'Bearer ' + token } });
+    },
+
+    resetPassword: (data) => {
+        const url = '/auth/resetPassword';
+        return axiosClient.post(url, data);
+    },
+
+    changePassword: (data, token) => {
+        const url = '/auth/changePassword';
+        return axiosClient.post(url, data, { headers: { Authorization: 'Bearer ' + token } });
+    },
+};
+
+export default authApi;

@@ -1,5 +1,5 @@
 import { Navigate } from 'react-router-dom';
-import config from '~/config';
+import config from './config';
 import DefaultLayout from '~/layouts/DefaultLayout';
 import HomePage from '~/pages/HomePage/HomePage';
 import Login from '~/pages/Login/Login';

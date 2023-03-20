@@ -14,11 +14,21 @@ function MenuAccount() {
                 {
                     listMenu.map( (item, index) => {
                         return (
-                            <div className={cx('item')}>
-                                <NavLink key={index} to={`${item.link}`} >
-                                 {item.title}
-                                </NavLink>
-                            </div>
+                            <NavLink
+                            key={index}
+                            to={item.link}
+                          >
+                            {({ isActive }) => (
+                              <div className={cx("menu-item")}>
+                                <div className={cx("item-sidebar", { isActive })}></div>
+                        
+                                <div className={cx("item_title")}>{item.title}</div>
+                             
+                              </div>
+                            )}
+                          </NavLink>
+                               
+                            
                         )
                     })
                 }

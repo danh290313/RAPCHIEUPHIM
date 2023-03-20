@@ -1,0 +1,15 @@
+
+.btn-submit {
+    margin-left: 900px;
+    margin-top: 10px;
+    &:hover{
+        background-color: rgb(212, 228, 228);
+    }
+   
+}
+.title {
+    font-size: large;
+    font-weight: bolder;
+    color: red;
+    margin-bottom: 10px;
+}
