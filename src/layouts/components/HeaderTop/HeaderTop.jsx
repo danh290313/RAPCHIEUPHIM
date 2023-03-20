@@ -3,10 +3,30 @@ import styles from './HeaderTop.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import images from '../Images/';
-import {Link, Outlet}  from 'react-router-dom';
+import { getUserInfoAction, logoutAction } from '~/redux/actions/authActions';
+
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 const cx = classnames.bind(styles);
 
 function HeaderTop() {
+    const user = useSelector((state) => state.auth.user);
+    const isLogined = user ? true : false;
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const onLogout = (e) => {
+        e.preventDefault();
+        dispatch(logoutAction());
+        navigate('/');
+    };
+    useEffect(() => {
+        if (isLogined) {
+            dispatch(getUserInfoAction());
+        }
+    }, [dispatch, isLogined]);
+
     return (
         <>
             <div className={cx('wrapper')}>
@@ -23,12 +43,37 @@ function HeaderTop() {
                     <span className={cx('content-detail')}>Vé của tôi</span>
                 </div>
                 <li className={cx('content-detail')}>
-                    <FontAwesomeIcon icon={faUser} className={cx('icon-dangnhap')} />
-                    <span className={cx('dangnhap')}>
-                     <Link to={`/customer/account`}> Đăng nhập/Đăng ký </Link>    
-               
-                    </span>
-                  
+                    {!user ? (
+                        <div>
+                            <FontAwesomeIcon icon={faUser} className={cx('icon-dangnhap')} />
+                            <span className={cx('dangnhap')}>
+                                <Link to={`/customer/login`}> Đăng nhập/Đăng ký </Link>
+                            </span>
+                        </div>
+                    ) : (
+                        <div>
+                            <div>
+                                <img
+                                    src="https://icon-library.com/images/customer-icon/customer-icon-29.jpg"
+                                    alt="avatar"
+                                    width={50}
+                                    height={50}
+                              
+                                />
+                                    <span className={cx('name-user')}>
+                                        
+                                    <Link to={`/customer/profile`}> {user.name}</Link>
+                                        </span>
+                                <span>
+                                    <a className={cx('logout')} onClick={onLogout} href="/logout">
+                                        Đăng xuất
+                                    </a>
+                                </span>
+                            </div>
+
+                          
+                        </div>
+                    )}
                 </li>
             </div>
         </>
