@@ -1,16 +1,36 @@
-.swapper{
-    display: flex;
-    margin: 1% 20%;
-    
+.swapper {
+        display: flex;
+        margin: 1% 20%;
 }
 .sidebar {
-    flex: 1;
-    border-right: black solid;
-    &:active {
+        flex: 1;
+        border-right: black solid;
        
-        background-color: red;
-      }
 }
 .body {
-    flex: 3;
+        flex: 3;
+}
+.menu-item {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        padding: 9px;
+        position: relative;
+        cursor: pointer;
+        border-bottom: var(--cool-border);
+       
+}
+.item-sidebar {
+        
+        &.isActive{
+                border-left: 5px solid var(--primary);
+                position: absolute;
+                height: 100%;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                animation: grow 0.2s ease;
+        }
+       
+              
 }

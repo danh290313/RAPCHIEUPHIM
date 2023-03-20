@@ -19,15 +19,18 @@ import Item from './Item';
 const cx = classNames.bind(styles);
 
 function Member({ children }) {
-    const renderTippy = () => (
-        <div className={cx('wrapper')} tabIndex="-1">
-            <Box className={cx('Menu')} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                <nav aria-label="main mailbox folders">
-                    <List>
-                        <Item name="Tài khoản CGV" to="customer/account/login" />
-                        <Item name="Quyền lợi" to="cgv-membership" />
+  const renderTippy = () => (
+    <div className={cx('wrapper')} tabIndex='-1'>
+      <Box
+        className={cx('Menu')}
+        sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+      >
+        <nav aria-label='main mailbox folders'>
+          <List>
+            <Item name='Tài khoản CGV' to='customer/account/login' />
+            <Item name='Quyền lợi' to='cgv-membership' />
 
-                        {/* <ListItem disablePadding>
+            {/* <ListItem disablePadding>
                             <ListItemButton>
                                 <ListItemText primary="Inbox" />
                                 <ListItemIcon>
@@ -43,26 +46,26 @@ function Member({ children }) {
                                 <ListItemText primary="Drafts" />
                             </ListItemButton>
                         </ListItem> */}
-                    </List>
-                </nav>
-            </Box>
-        </div>
-    );
+          </List>
+        </nav>
+      </Box>
+    </div>
+  );
 
-    return (
-        <div>
-            <Tippy
-                interactive={true}
-                render={renderTippy}
-                delay={[0, 10]}
-                hideOnClick={false}
-                animation={false}
-                placement="bottom-start"
-            >
-                {children}
-            </Tippy>
-        </div>
-    );
+  return (
+    <div>
+      <Tippy
+        interactive={true}
+        render={renderTippy}
+        delay={[0, 10]}
+        hideOnClick={false}
+        animation={false}
+        placement='bottom-start'
+      >
+        {children}
+      </Tippy>
+    </div>
+  );
 }
 
 export default Member;

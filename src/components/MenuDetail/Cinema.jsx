@@ -19,16 +19,19 @@ import Item from './Item';
 const cx = classNames.bind(styles);
 
 function Cinema({ children }) {
-    const renderTippy = () => (
-        <div className={cx('wrapper')} tabIndex="-1">
-            <Box className={cx('Menu')} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                <nav aria-label="main mailbox folders">
-                    <List>
-                        <Item name="Tất cả các rạp" to="cinema/site" />
-                        <Item name="Rạp đặc biệt" to="cinema/special" />
-                        <Item name="Rạp 3D" to="cinema/3d" />
+  const renderTippy = () => (
+    <div className={cx('wrapper')} tabIndex='-1'>
+      <Box
+        className={cx('Menu')}
+        sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+      >
+        <nav aria-label='main mailbox folders'>
+          <List>
+            <Item name='Tất cả các rạp' to='cinema/site' />
+            <Item name='Rạp đặc biệt' to='cinema/special' />
+            <Item name='Rạp 3D' to='cinema/3d' />
 
-                        {/* <ListItem disablePadding>
+            {/* <ListItem disablePadding>
                             <ListItemButton>
                                 <ListItemText primary="Inbox" />
                                 <ListItemIcon>
@@ -44,26 +47,26 @@ function Cinema({ children }) {
                                 <ListItemText primary="Drafts" />
                             </ListItemButton>
                         </ListItem> */}
-                    </List>
-                </nav>
-            </Box>
-        </div>
-    );
+          </List>
+        </nav>
+      </Box>
+    </div>
+  );
 
-    return (
-        <div>
-            <Tippy
-                interactive={true}
-                render={renderTippy}
-                delay={[0, 10]}
-                hideOnClick={false}
-                animation={false}
-                placement="bottom-start"
-            >
-                {children}
-            </Tippy>
-        </div>
-    );
+  return (
+    <div>
+      <Tippy
+        interactive={true}
+        render={renderTippy}
+        delay={[0, 10]}
+        hideOnClick={false}
+        animation={false}
+        placement='bottom-start'
+      >
+        {children}
+      </Tippy>
+    </div>
+  );
 }
 
 export default Cinema;
