@@ -19,17 +19,20 @@ import Item from './Item';
 const cx = classNames.bind(styles);
 
 function Curtereplex({ children }) {
-    const renderTippy = () => (
-        <div className={cx('wrapper')} tabIndex="-1">
-            <Box className={cx('Menu')} sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-                <nav aria-label="main mailbox folders">
-                    <List>
-                        <Item name="Quầy online" to="online-store/movie-voucher" />
-                        <Item name="THuê rạp và vé nhóm" to="online-store/movie-voucher2" />
-                        <Item name="E-Cgv" to="online-store/movie-voucher3" />
-                        <Item name="Thẻ quà tặng" to="online-store/movie-voucher4" />
+  const renderTippy = () => (
+    <div className={cx('wrapper')} tabIndex='-1'>
+      <Box
+        className={cx('Menu')}
+        sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+      >
+        <nav aria-label='main mailbox folders'>
+          <List>
+            <Item name='Quầy online' to='online-store/movie-voucher' />
+            <Item name='THuê rạp và vé nhóm' to='online-store/movie-voucher2' />
+            <Item name='E-Cgv' to='online-store/movie-voucher3' />
+            <Item name='Thẻ quà tặng' to='online-store/movie-voucher4' />
 
-                        {/* <ListItem disablePadding>
+            {/* <ListItem disablePadding>
                             <ListItemButton>
                                 <ListItemText primary="Inbox" />
                                 <ListItemIcon>
@@ -45,26 +48,26 @@ function Curtereplex({ children }) {
                                 <ListItemText primary="Drafts" />
                             </ListItemButton>
                         </ListItem> */}
-                    </List>
-                </nav>
-            </Box>
-        </div>
-    );
+          </List>
+        </nav>
+      </Box>
+    </div>
+  );
 
-    return (
-        <div>
-            <Tippy
-                interactive={true}
-                render={renderTippy}
-                delay={[0, 10]}
-                hideOnClick={false}
-                animation={false}
-                placement="bottom-start"
-            >
-                {children}
-            </Tippy>
-        </div>
-    );
+  return (
+    <div>
+      <Tippy
+        interactive={true}
+        render={renderTippy}
+        delay={[0, 10]}
+        hideOnClick={false}
+        animation={false}
+        placement='bottom-start'
+      >
+        {children}
+      </Tippy>
+    </div>
+  );
 }
 
 export default Curtereplex;

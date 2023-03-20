@@ -15,18 +15,22 @@ import { Link } from 'react-router-dom';
 const cx = classNames.bind(styles);
 
 function Item({ name, to }) {
-    return (
-        <Link to={`/${to}`}>
-            <ListItem disablePadding className={cx('item')}>
-                <ListItemButton>
-                    <ListItemText primary={name} />
-                    <ListItemIcon>
-                        <img src={images.iconMenuDetail} alt="" className={cx('icon-item')} />
-                    </ListItemIcon>
-                </ListItemButton>
-            </ListItem>
-        </Link>
-    );
+  return (
+    <Link to={`/${to}`}>
+      <ListItem disablePadding className={cx('item')}>
+        <ListItemButton>
+          <ListItemText primary={name} />
+          <ListItemIcon>
+            <img
+              src={images.iconMenuDetail}
+              alt=''
+              className={cx('icon-item')}
+            />
+          </ListItemIcon>
+        </ListItemButton>
+      </ListItem>
+    </Link>
+  );
 }
 
 export default Item;
