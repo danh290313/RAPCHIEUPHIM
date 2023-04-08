@@ -1,6 +1,7 @@
 import { Container, Stack } from 'react-bootstrap';
 import MarioImage from '~/assets/Images/movies/super-mario.jpg';
-import MovieCard from '../../components/UI/MovieCard';
+import MovieCard from '../../components/Movie/MovieCard';
+
 import styles from './NowShowing.scss';
 function NowShowing() {
   return (
@@ -16,6 +17,7 @@ function NowShowing() {
       </Stack>
       <hr />
       <MovieCard
+        movieId={1}
         image={MarioImage}
         title='phim anh em super mario'
         filmGenres='Hài, Hoạt Hình, Phiêu Lưu'

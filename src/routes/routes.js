@@ -1,10 +1,11 @@
 import { Navigate } from 'react-router-dom';
-import config from './config';
 import DefaultLayout from '~/layouts/DefaultLayout';
 import HomePage from '~/pages/HomePage/HomePage';
 import Login from '~/pages/Login/Login';
 import MenuAccount from '../pages/MenuAccount/MenuAccount';
+import MovieDetail from '../pages/Movie/MovieDetail';
 import NowShowing from '../pages/Movie/NowShowing';
+import config from './config';
 
 const publicRoutes = [
   { path: config.routes.home, component: HomePage, layout: DefaultLayout },
@@ -21,6 +22,11 @@ const publicRoutes = [
   {
     path: config.routes.moviePlaying,
     component: NowShowing,
+    layout: DefaultLayout,
+  },
+  {
+    path: config.routes.movieDetail,
+    component: MovieDetail,
     layout: DefaultLayout,
   },
   // {
@@ -42,4 +48,4 @@ const publicRoutes = [
 ];
 const privateRoutes = [{}];
 
-export { publicRoutes, privateRoutes };
+export { privateRoutes, publicRoutes };
