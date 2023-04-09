@@ -16,7 +16,7 @@ const BootstrapModal = React.forwardRef((props, ref) => {
 
   return (
     <>
-      <Modal show={show} onHide={handleClose}>
+      <Modal fullscreen='true' size='xl' show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Modal heading</Modal.Title>
         </Modal.Header>

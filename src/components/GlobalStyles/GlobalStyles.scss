@@ -1,5 +1,5 @@
-@import "normalize.css";
-@import url("http://fonts.cdnfonts.com/css/baloo-2-2");
+@import 'normalize.css';
+@import url('http://fonts.cdnfonts.com/css/baloo-2-2');
 
 :root {
   --primary: rgb(0, 111, 60);
@@ -8,7 +8,7 @@
   --text-color: #333;
   --white: #fff;
   --black: #000;
-  --font-family: "Baloo 2", sans-serif;
+  --font-family: 'Baloo 2', sans-serif;
   --border-color: #bdc3c7;
   --search-boder-radius: 30px;
   --search-icon-width: 45px;

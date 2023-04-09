@@ -1,8 +1,9 @@
 import { Fragment, useRef } from 'react';
 import { Button, Card, Stack } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import BootstrapModal from '../UI/BootstrapModal';
 import ButtonWithIcon from '../UI/ButtonWithIcon';
+import LoadingModal from '../UI/LoadingModal';
+import BuyTicketModal from './BuyTicketModal';
 const MovieCard = props => {
   const { movieId, image, title, filmGenres, duration, premiereDate } = props;
   const modalRef = useRef();
@@ -13,7 +14,8 @@ const MovieCard = props => {
 
   return (
     <Fragment>
-      <BootstrapModal ref={modalRef} />
+      {/* <LoadingModal />*/}
+      <BuyTicketModal ref={modalRef} />
       <Card style={{ width: '12rem' }} className='border border-0'>
         <Link to={`/movie/movie-detail/${movieId}`}>
           <Card.Img
@@ -42,7 +44,7 @@ const MovieCard = props => {
           </Card.Text>
           <ButtonWithIcon
             variant='danger'
-            styles='float-end'
+            styles='float-end text-red-500'
             btnContent='mua vé'
             btnContentStyles='text-uppercase'
             gap='2'
