@@ -17,7 +17,7 @@ const BuyTicketModal = React.forwardRef((props, ref) => {
 
   return (
     <>
-      <Modal fullscreen='true' size='xl' show={show} onHide={handleClose}>
+      <Modal size='xl' show={show} onHide={handleClose} scrollable>
         <Modal.Header closeButton style={{ backgroundColor: '#eee' }}>
           <Modal.Title className='text-uppercase text-secondary'>
             Đặt vé xem phim
