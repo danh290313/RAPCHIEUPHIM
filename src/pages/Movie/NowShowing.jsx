@@ -1,30 +1,62 @@
 import { Container, Stack } from 'react-bootstrap';
+import { Grid } from '@mui/material';
+import { useState, useEffect } from 'react';
 import MarioImage from '~/assets/Images/movies/super-mario.jpg';
 import MovieCard from '../../components/Movie/MovieCard';
 
 import styles from './NowShowing.scss';
+
+import movieApi from '~/api/movieApi';
+
 function NowShowing() {
+  const [movies, setMovies] = useState();
+
+  useEffect(() => {
+    const getListMovies = async () => {
+      const movies = await movieApi.getAll();
+      setMovies(movies);
+    };
+    getListMovies();
+  }, []);
+
+  console.log('movies', movies);
+
   return (
-    <Container className='py-5'>
-      <Stack direction='horizontal'>
-        <h2>Phim Đang Chiếu</h2>
-        <h4
-          className='ms-auto text-uppercase align-self-end fw-light text-body-tertiary te '
-          style={{ cursor: 'pointer' }}
-        >
-          Phim sắp chiếu
-        </h4>
-      </Stack>
-      <hr />
-      <MovieCard
-        movieId={1}
-        image={MarioImage}
-        title='phim anh em super mario'
-        filmGenres='Hài, Hoạt Hình, Phiêu Lưu'
-        duration='93'
-        premiereDate='07-04-2023'
-      />
-    </Container>
+    movies && (
+      <Container className='py-5'>
+        <Stack direction='horizontal'>
+          <h2>Phim Đang Chiếu</h2>
+          <h4
+            className='ms-auto text-uppercase align-self-end fw-light text-body-tertiary te '
+            style={{ cursor: 'pointer' }}
+          >
+            Phim sắp chiếu
+          </h4>
+        </Stack>
+        <hr />
+        <Grid container spacing={2}>
+          {movies?.map(
+            (
+              { id, smallImageURl, name, categories, duration, releaseDate },
+              i
+            ) => {
+              return (
+                <Grid key={i} item md={3} sm={12}>
+                  <MovieCard
+                    movieId={id}
+                    image={smallImageURl}
+                    title={name}
+                    filmGenres={categories}
+                    duration={duration}
+                    premiereDate={releaseDate}
+                  />
+                </Grid>
+              );
+            }
+          )}
+        </Grid>
+      </Container>
+    )
   );
 }
 
