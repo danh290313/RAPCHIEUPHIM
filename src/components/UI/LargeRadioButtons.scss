@@ -39,7 +39,7 @@ $activeShadow: 0 0 10px rgba($teal1, 0.5);
   box-sizing: border-box;
   font-size: 0;
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: row wrap;
   justify-content: flex-start;
   align-items: stretch;
   input {
