@@ -1,6 +1,6 @@
-import { Container, Stack } from 'react-bootstrap';
 import { Grid } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Container, Stack } from 'react-bootstrap';
 import MarioImage from '~/assets/Images/movies/super-mario.jpg';
 import MovieCard from '../../components/Movie/MovieCard';
 
@@ -10,7 +10,6 @@ import movieApi from '~/api/movieApi';
 
 function NowShowing() {
   const [movies, setMovies] = useState();
-
   useEffect(() => {
     const getListMovies = async () => {
       const movies = await movieApi.getAll();

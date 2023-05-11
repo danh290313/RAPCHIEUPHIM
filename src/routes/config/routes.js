@@ -9,6 +9,7 @@ const routes = {
   // customer_register: "/customer/register"
   moviePlaying: 'movie/now-showing',
   movieDetail: 'movie/movie-detail/:movieId',
+  bookingSeat: 'movie/booking/seat',
   movie: 'phim/phimchieu',
 };
 export default routes;

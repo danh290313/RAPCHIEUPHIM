@@ -1,5 +1,6 @@
 import { Form, Formik } from 'formik';
 import { Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import FieldsetContainer from '../UI/FieldsetContainer/FieldsetContainer';
 import FormikControl from '../UI/FormikControl';
 const branchList = [
@@ -33,13 +34,16 @@ const initialValues = {
   time: '',
 };
 
+let navigate;
 const onSubmitHandler = values => {
   console.log(
     '🚀 ~ file: BuyTicketStep1Form.jsx:8 ~ onSubmit ~ values:',
     values
   );
+  navigate('/movie/booking/seat');
 };
 const BuyTicketStep1Form = () => {
+  navigate = useNavigate();
   return (
     <Formik
       initialValues={initialValues}

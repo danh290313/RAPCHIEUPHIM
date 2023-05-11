@@ -11,28 +11,6 @@ import HeaderMenu from '~/layouts/components/HeaderMenu';
 const cx = classNames.bind(styles);
 
 function HomePage() {
-  // test
-  useEffect(() => {
-    const sendRequest = async () => {
-      const response = await movieApi.getAll();
-      if (response) {
-        console.log('allMovie', response.data);
-      }
-    };
-
-    try {
-      console.log('in send request');
-      sendRequest()
-        .then(response => {
-          console.log('request response', response);
-        })
-        .catch(e => {
-          console.log('sendRequest error', e);
-        });
-    } catch (e) {
-      console.log('error', e);
-    }
-  }, []);
   return (
     <div className={cx('wrapper')}>
       <HeaderMenu />

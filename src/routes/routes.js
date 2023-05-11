@@ -3,6 +3,7 @@ import DefaultLayout from '~/layouts/DefaultLayout';
 import HomePage from '~/pages/HomePage/HomePage';
 import Login from '~/pages/Login/Login';
 import MenuAccount from '../pages/MenuAccount/MenuAccount';
+import BookingSeat from '../pages/Movie/Booking/BookingSeat';
 import MovieDetail from '../pages/Movie/MovieDetail';
 import NowShowing from '../pages/Movie/NowShowing';
 import config from './config';
@@ -27,6 +28,11 @@ const publicRoutes = [
   {
     path: config.routes.movieDetail,
     component: MovieDetail,
+    layout: DefaultLayout,
+  },
+  {
+    path: config.routes.bookingSeat,
+    component: BookingSeat,
     layout: DefaultLayout,
   },
   // {

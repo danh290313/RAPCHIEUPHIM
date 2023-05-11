@@ -1,29 +1,35 @@
+import { useEffect, useState } from 'react';
 import { Container, Stack } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 import MarioImage from '~/assets/Images/movies/super-mario.jpg';
-import ButtonWithIcon from '../../components/UI/ButtonWithIcon';
+import movieApi from '../../api/movieApi';
 import MovieDetailMultiTabs from '../../components/Movie/MovieDetailMultiTabs';
+import ButtonWithIcon from '../../components/UI/ButtonWithIcon';
+const initialMovieState = {
+  id: '',
+  name: '',
+  director: '',
+  actors: '',
+  categories: '',
+  releaseDate: '',
+  duration: '',
+  language: '',
+  longDescription: '',
+  smallImageURl: '',
+  trailerURL: '',
+};
 const MovieDetail = props => {
-  // lấy api về
-  // const {
-  //   director,
-  //   cast,
-  //   genres,
-  //   releaseDate,
-  //   duration,
-  //   languages,
-  //   movieDescription,
-  //   trailerSrc,
-  // }
-  const filmName = 'Phim anh em super mario';
-  const director = 'Aaron Horvath, Michael Jelenic';
-  const cast = ' Chris Pratt, Anya Taylor-Joy, Charlie Day, … ';
-  const genres = 'Hài, Hoạt Hình, Phiêu Lưu';
-  const releaseDate = '07/04/2023';
-  const duration = ' 93 phút';
-  const languages = 'Tiếng Anh - Phụ đề Tiếng Việt; Lồng tiếng';
-  const movieDescription =
-    'Câu chuyện về cuộc phiêu lưu của anh em Super Mario đến vương quốc Nấm.';
-  const trailerSrc = 'https://www.youtube.com/embed/UGO_i2tf1BM ';
+  const params = useParams();
+  const [movie, setMovie] = useState(initialMovieState);
+  const { movieId } = params;
+
+  useEffect(() => {
+    const getMovieDetail = async movieId => {
+      const movie = await movieApi.getById(movieId);
+      setMovie(movie);
+    };
+    getMovieDetail(movieId);
+  }, [movieId]);
   return (
     <Container className='py-5'>
       <Stack direction='horizontal'>
@@ -31,35 +37,35 @@ const MovieDetail = props => {
       </Stack>
       <hr className='border border-2 border-dark' />
       <Stack direction='horizontal' gap={4}>
-        <img src={MarioImage} alt='' className='img-fluid' />
+        <img src={movie.smallImageURl} alt='' className='img-fluid' />
 
         <div className='w-100'>
-          <h4 className='text-uppercase'>{filmName}</h4>
+          <h4 className='text-uppercase'>{movie.name}</h4>
           <hr />
           <div className='movie-info fs-6'>
             <div>
               <label className='fw-semibold'>Đạo diễn: </label>
-              <span>&nbsp; {director}</span>
+              <span>&nbsp; {movie.director}</span>
             </div>
             <div>
               <label className='fw-semibold'>Diễn viên: </label>
-              <span>&nbsp; {cast}</span>
+              <span>&nbsp; {movie.actors}</span>
             </div>
             <div>
               <label className='fw-semibold'>Thể loại: </label>
-              <span>&nbsp; {genres}</span>
+              <span>&nbsp; {movie.categories}</span>
             </div>
             <div>
               <label className='fw-semibold'>Khởi chiếu: </label>
-              <span>&nbsp; {releaseDate}</span>
+              <span>&nbsp; {movie.releaseDate}</span>
             </div>
             <div>
               <label className='fw-semibold'>Thời lượng: </label>
-              <span>&nbsp; {duration}</span>
+              <span>&nbsp; {movie.duration} phút</span>
             </div>
             <div className='mb-4'>
               <label className='fw-semibold'>Ngôn ngữ: </label>
-              <span>&nbsp; {languages}</span>
+              <span>&nbsp; {movie.language}</span>
             </div>
             <ButtonWithIcon
               variant='danger'
@@ -85,8 +91,8 @@ const MovieDetail = props => {
       </Stack>
       <div>
         <MovieDetailMultiTabs
-          movieDescription={movieDescription}
-          trailerSrc={trailerSrc}
+          movieDescription={movie.longDescription}
+          trailerSrc={movie.trailerURL}
         />
       </div>
     </Container>
