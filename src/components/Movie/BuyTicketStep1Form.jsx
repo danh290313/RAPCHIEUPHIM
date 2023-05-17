@@ -84,7 +84,6 @@ const BuyTicketStep1Form = () => {
         }
       });
       const tempbranchList = [];
-      //timeListAll = [];
       for (let [objKey, objValue] of Object.entries(scheduleWithSameName)) {
         console.log(objKey, objValue);
         tempbranchList.push({ key: objKey, value: objValue.branchId });
@@ -96,20 +95,10 @@ const BuyTicketStep1Form = () => {
       setBranchList(tempbranchList);
       setBranchId(tempbranchList[0]?.value);
       setTimeList(timeListObjOfEachBranch[tempbranchList[0]?.value]);
-
-      console.log(
-        '🚀 ~ file: BuyTicketStep1Form.jsx:63 ~ getScheduleFromMovieIdAndStartDate ~ scheduleWithSameName:',
-        scheduleWithSameName
-      );
-      console.log(
-        '🚀 ~ file: BuyTicketStep1Form.jsx:82 ~ getScheduleFromMovieIdAndStartDate ~ timeListObjOfEachBranch:',
-        timeListObjOfEachBranch
-      );
     };
     getScheduleFromMovieIdAndStartDate(date);
   }, [date, movieId]);
 
-  console.log('branchList', branchList);
   return (
     <Formik
       initialValues={initialValues}
