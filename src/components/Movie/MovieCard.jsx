@@ -1,14 +1,19 @@
 import { Fragment, useRef } from 'react';
 import { Button, Card, Stack } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import * as TicketActions from '~/redux/actions/ticketActions';
 import ButtonWithIcon from '../UI/ButtonWithIcon';
 import LoadingModal from '../UI/LoadingModal';
 import BuyTicketModal from './BuyTicketModal';
 const MovieCard = props => {
   const { movieId, image, title, filmGenres, duration, premiereDate } = props;
   const modalRef = useRef();
+  const dispatch = useDispatch();
 
   const buyTicketBtnHandler = () => {
+    // Lưu vào redux id phim và fetch chi nhánh, giờ chiếu phim  từ id phim
+    TicketActions.addMovieAction(dispatch, movieId);
     modalRef.current.showModal();
   };
 

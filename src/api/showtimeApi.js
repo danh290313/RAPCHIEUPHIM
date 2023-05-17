@@ -1,17 +1,26 @@
 import axiosClient from './axiosClient';
 
 const showtimeApi = {
-  getById: (id) => {
+  getById: id => {
     const url = `/showtimes/${id}`;
     return axiosClient.get(url);
   },
+  getScheduleAndStartTime: (movieId, startDate) => {
+    const url = `/TimeFromMovieAndDate?movieId=${movieId}&startDate=${startDate}`;
 
-  getByCineplexId: (data) => {
+    return axiosClient.get(url);
+  },
+  getSeatsFromSchedule: scheduleID => {
+    const url = `/api/${scheduleID}/seats`;
+    return axiosClient.get(url);
+  },
+
+  getByCineplexId: data => {
     const url = `/showtimes/cineplexs`;
     return axiosClient.post(url, data);
   },
 
-  getSeats: (id) => {
+  getSeats: id => {
     const url = `/showtimes/${id}/seats`;
     return axiosClient.get(url);
   },

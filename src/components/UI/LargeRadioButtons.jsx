@@ -5,13 +5,15 @@ import styles from './LargeRadioButtons.scss';
 import TextError from './TextError';
 const cx = classNames.bind(styles);
 const LargeRadioButtons = props => {
-  const { name, options, ...rest } = props;
+  const { name, options, onChangeHandler = null, ...rest } = props;
   return (
     <Fragment>
       <div className={cx('toggle')}>
         <Field name={name} {...rest}>
-          {({ field }) => {
-            return options.map(option => {
+          {({ form, field }) => {
+            const { setFieldValue } = form;
+
+            return options?.map(option => {
               return (
                 <Fragment key={option.key}>
                   <input
@@ -19,7 +21,14 @@ const LargeRadioButtons = props => {
                     {...field}
                     id={option.value}
                     value={option.value}
-                    checked={option.value === field.value}
+                    checked={option.value == field.value}
+                    onChange={e => {
+                      setFieldValue(name, option.value);
+                      if (name === 'branch') setFieldValue('time', '');
+                      if (onChangeHandler) {
+                        onChangeHandler(e.target.value);
+                      }
+                    }}
                   />
                   <label htmlFor={option.value}>{option.key}</label>
                 </Fragment>

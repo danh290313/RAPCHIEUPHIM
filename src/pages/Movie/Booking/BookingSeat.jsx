@@ -1,8 +1,11 @@
+import { useCallback, useEffect, useState } from 'react';
 import { Card, Container } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import ScreenImage from '~/assets/Images/movies/booking/bg-screen.png';
 import MarioImage from '~/assets/Images/movies/super-mario.jpg';
+import showtimeApi from '../../../api/showtimeApi';
 
-const seats = [
+const initialSeats = [
   { key: 'A1', value: 'a1', isBooked: false },
   { key: 'A2', value: 'a2', isBooked: false },
   { key: 'A3', value: 'a3', isBooked: true },
@@ -43,20 +46,43 @@ const seats = [
   { key: 'C3', value: 'c3', isBooked: false },
 ];
 
-const choosenSeatHandler = e => {
-  console.log(e.target.classList);
-  const targetClassList = e.target.classList;
-  targetClassList.toggle('notChosen');
-  if (targetClassList.contains('notChosen')) {
-    targetClassList.add('btn-outline-danger');
-    targetClassList.remove('btn-danger');
-  } else {
-    targetClassList.add('btn-danger');
-    targetClassList.remove('btn-outline-danger');
-  }
-};
-
 const BookingSeat = props => {
+  // gọi useEffect để lấy các ghế trong schedule đúng 1 lần rồi bỏ vào testSeats
+  const [seats, setSeats] = useState(initialSeats);
+  const scheduleID = useSelector(state => state.ticket.scheduleID);
+  useEffect(() => {
+    const getSeatsFromAPI = async scheduleID => {
+      const seatsFromAPI = await showtimeApi.getSeatsFromSchedule(scheduleID); // {id : number, name: string, isOccupied: number (0,1)}
+    };
+
+    getSeatsFromAPI(scheduleID);
+  }, [scheduleID]);
+
+  const choosenSeatHandler = useCallback(e => {
+    console.log(e.target.classList);
+    const targetClassList = e.target.classList;
+    targetClassList.toggle('notChosen');
+    if (targetClassList.contains('notChosen')) {
+      targetClassList.add('btn-outline-danger');
+      targetClassList.remove('btn-danger');
+      setSeats(prevState =>
+        [
+          ...prevState,
+          {
+            key: e.target.value.toUpperCase(),
+            value: e.target.value,
+            isBooked: true,
+          },
+        ].sort((a, b) => a.key - b.key)
+      );
+    } else {
+      targetClassList.add('btn-danger');
+      targetClassList.remove('btn-outline-danger');
+      setSeats(prevState =>
+        prevState.filter(seatObj => seatObj.value !== e.target.value)
+      );
+    }
+  }, []);
   return (
     <Container className='my-4 mx-auto' style={{ maxWidth: '850px' }}>
       <div className='header'>
