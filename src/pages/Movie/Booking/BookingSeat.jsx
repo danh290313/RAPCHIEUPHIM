@@ -5,84 +5,57 @@ import ScreenImage from '~/assets/Images/movies/booking/bg-screen.png';
 import MarioImage from '~/assets/Images/movies/super-mario.jpg';
 import showtimeApi from '../../../api/showtimeApi';
 
-const initialSeats = [
-  { key: 'A1', value: 'a1', isBooked: false },
-  { key: 'A2', value: 'a2', isBooked: false },
-  { key: 'A3', value: 'a3', isBooked: true },
-  { key: 'B1', value: 'b1', isBooked: false },
-  { key: 'B2', value: 'b2', isBooked: false },
-  { key: 'C1', value: 'c1', isBooked: true },
-  { key: 'C2', value: 'c2', isBooked: false },
-  { key: 'C3', value: 'c3', isBooked: false },
-  { key: 'C1', value: 'c1', isBooked: true },
-  { key: 'C2', value: 'c2', isBooked: false },
-  { key: 'C3', value: 'c3', isBooked: false },
-  { key: 'C1', value: 'c1', isBooked: true },
-  { key: 'C2', value: 'c2', isBooked: false },
-  { key: 'C3', value: 'c3', isBooked: false },
-  { key: 'C1', value: 'c1', isBooked: true },
-  { key: 'C2', value: 'c2', isBooked: false },
-  { key: 'C3', value: 'c3', isBooked: false },
-  { key: 'C1', value: 'c1', isBooked: true },
-  { key: 'C2', value: 'c2', isBooked: false },
-  { key: 'C3', value: 'c3', isBooked: false },
-  { key: 'C1', value: 'c1', isBooked: true },
-  { key: 'C2', value: 'c2', isBooked: false },
-  { key: 'C3', value: 'c3', isBooked: false },
-  { key: 'C1', value: 'c1', isBooked: true },
-  { key: 'C2', value: 'c2', isBooked: false },
-  { key: 'C3', value: 'c3', isBooked: false },
-  { key: 'C1', value: 'c1', isBooked: true },
-  { key: 'C2', value: 'c2', isBooked: false },
-  { key: 'C3', value: 'c3', isBooked: false },
-  { key: 'C1', value: 'c1', isBooked: true },
-  { key: 'C2', value: 'c2', isBooked: false },
-  { key: 'C3', value: 'c3', isBooked: false },
-  { key: 'C1', value: 'c1', isBooked: true },
-  { key: 'C2', value: 'c2', isBooked: false },
-  { key: 'C3', value: 'c3', isBooked: false },
-  { key: 'C1', value: 'c1', isBooked: true },
-  { key: 'C2', value: 'c2', isBooked: false },
-  { key: 'C3', value: 'c3', isBooked: false },
-];
-
 const BookingSeat = props => {
   // gọi useEffect để lấy các ghế trong schedule đúng 1 lần rồi bỏ vào testSeats
-  const [seats, setSeats] = useState(initialSeats);
+  const [seats, setSeats] = useState([]);
+  const [ticketSeats, setTicketSeats] = useState([]);
+  console.log(
+    '🚀 ~ file: BookingSeat.jsx:53 ~ BookingSeat ~ ticketSeats:',
+    ticketSeats
+  );
   const scheduleID = useSelector(state => state.ticket.scheduleID);
+  useEffect(() => {
+    // lấy hình với tên phim , tên phòng, địa chỉ, thời gian chiếu (định dạng giờ, ngày)
+  }, []);
   useEffect(() => {
     const getSeatsFromAPI = async scheduleID => {
       const seatsFromAPI = await showtimeApi.getSeatsFromSchedule(scheduleID); // {id : number, name: string, isOccupied: number (0,1)}
+      const seatsDTO = seatsFromAPI?.map(seat => ({
+        key: seat.name,
+        value: seat.id,
+        isBooked: seat.isOccupied === 1,
+      }));
+      setSeats(seatsDTO);
     };
 
     getSeatsFromAPI(scheduleID);
   }, [scheduleID]);
 
-  const choosenSeatHandler = useCallback(e => {
+  const choosenSeatHandler = e => {
     console.log(e.target.classList);
+    console.log('e.target.value', e.target.value);
+    console.log('e.target.name', e.target.name);
+
     const targetClassList = e.target.classList;
     targetClassList.toggle('notChosen');
     if (targetClassList.contains('notChosen')) {
       targetClassList.add('btn-outline-danger');
       targetClassList.remove('btn-danger');
-      setSeats(prevState =>
-        [
-          ...prevState,
-          {
-            key: e.target.value.toUpperCase(),
-            value: e.target.value,
-            isBooked: true,
-          },
-        ].sort((a, b) => a.key - b.key)
+      setTicketSeats(prevState =>
+        prevState.filter(seat => seat.id !== Number(e.target.value))
       );
     } else {
       targetClassList.add('btn-danger');
       targetClassList.remove('btn-outline-danger');
-      setSeats(prevState =>
-        prevState.filter(seatObj => seatObj.value !== e.target.value)
+      setTicketSeats(prevState =>
+        [
+          ...prevState,
+          { name: e.target.name, id: Number(e.target.value) },
+        ].sort((a, b) => a.name.localeCompare(b.name))
       );
     }
-  }, []);
+  };
+
   return (
     <Container className='my-4 mx-auto' style={{ maxWidth: '850px' }}>
       <div className='header'>
@@ -145,6 +118,8 @@ const BookingSeat = props => {
                     fontSize: '0.85rem',
                     margin: '0.1rem',
                   }}
+                  value={seat.value}
+                  name={seat.key}
                   onClick={choosenSeatHandler}
                 >
                   {seat.key}

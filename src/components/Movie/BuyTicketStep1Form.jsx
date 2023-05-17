@@ -38,20 +38,35 @@ const BuyTicketStep1Form = () => {
   const onSubmitHandler = useCallback(
     values => {
       const { branch, time } = values;
-      for (let [key, value] of Object.entries(scheduleWithSameName)) {
-        if (value.branchId === branch) {
-          for (let [scheduleID, scheduleTime] of Object.entries(
-            value.schedules
-          )) {
-            //
-            if (time === scheduleTime) {
-              TicketActions.addScheduleAction(dispatch, scheduleID);
-              break;
-            }
-          }
+      console.log(
+        '🚀 ~ file: BuyTicketStep1Form.jsx:41 ~ BuyTicketStep1Form ~ time:',
+        time
+      );
+      console.log(
+        '🚀 ~ file: BuyTicketStep1Form.jsx:41 ~ BuyTicketStep1Form ~ branch:',
+        branch
+      );
+      let branchObj = null;
+      for (let key in scheduleWithSameName) {
+        if (scheduleWithSameName[key].branchId === branch) {
+          branchObj = scheduleWithSameName[key];
           break;
         }
       }
+      for (let i = 0; i < branchObj.schedules.length; ++i) {
+        console.log(
+          '🚀 ~ file: BuyTicketStep1Form.jsx:59 ~ BuyTicketStep1Form ~ (branchObj.schedules[i]:',
+          branchObj.schedules[i]
+        );
+
+        if (branchObj.schedules[i].startTime === time) {
+          TicketActions.addScheduleAction(
+            dispatch,
+            branchObj.schedules[i].scheduleId
+          );
+        }
+      }
+
       navigate('/movie/booking/seat');
     },
     [dispatch, navigate]
@@ -73,7 +88,7 @@ const BuyTicketStep1Form = () => {
         const { name } = item.branch;
         if (name in scheduleWithSameName) {
           scheduleWithSameName[name].schedules.push({
-            schedule: item.id,
+            scheduleId: item.id,
             startTime: item.startTime,
           });
         } else {
