@@ -14,6 +14,10 @@ const showtimeApi = {
     const url = `${scheduleID}/seats`;
     return axiosClient.get(url);
   },
+  getScheduleByID: scheduleID => {
+    const url = `/schedule?id=${scheduleID}`;
+    return axiosClient.get(url);
+  },
 
   getByCineplexId: data => {
     const url = `/showtimes/cineplexs`;

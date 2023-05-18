@@ -1,22 +1,63 @@
-import { useCallback, useEffect, useState } from 'react';
-import { Card, Container } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { Container } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
 import ScreenImage from '~/assets/Images/movies/booking/bg-screen.png';
-import MarioImage from '~/assets/Images/movies/super-mario.jpg';
+import * as ticketActions from '~/redux/actions/ticketActions';
+import movieApi from '../../../api/movieApi';
 import showtimeApi from '../../../api/showtimeApi';
 
+const initialMovieInfo = { name: '', smallImageURl: '' };
+const initialScheduleInfo = {
+  price: 3000,
+  branchName: '',
+  startDate: '',
+  startTime: '',
+  room: { name: '' },
+};
+
+const handleMoney = money => {
+  let total = '';
+  const moneyString = String(money);
+  let temp = '';
+  for (let i = moneyString.length - 1; i >= 0; --i) {
+    temp = moneyString[i] + temp;
+    if (temp.length === 3) {
+      if (i !== 0) {
+        temp = '.' + temp;
+      }
+      total = temp + total;
+      temp = '';
+    }
+  }
+  total = temp + total;
+  return total;
+};
 const BookingSeat = props => {
   // gọi useEffect để lấy các ghế trong schedule đúng 1 lần rồi bỏ vào testSeats
   const [seats, setSeats] = useState([]);
   const [ticketSeats, setTicketSeats] = useState([]);
-  console.log(
-    '🚀 ~ file: BookingSeat.jsx:53 ~ BookingSeat ~ ticketSeats:',
-    ticketSeats
-  );
+  const [movieInfo, setMovieInfo] = useState(initialMovieInfo);
+  const [scheduleInfo, setScheduleInfo] = useState(initialScheduleInfo);
   const scheduleID = useSelector(state => state.ticket.scheduleID);
+  const movieID = useSelector(state => state.ticket.movieId);
   useEffect(() => {
-    // lấy hình với tên phim , tên phòng, địa chỉ, thời gian chiếu (định dạng giờ, ngày)
-  }, []);
+    // lấy tên phòng, địa chỉ, thời gian chiếu (định dạng giờ, ngày)
+    const fetchScheduleInfor = async scheduleID => {
+      const data = await showtimeApi.getScheduleByID(scheduleID);
+      setScheduleInfo(data);
+    };
+    fetchScheduleInfor(scheduleID);
+  }, [scheduleID]);
+
+  useEffect(() => {
+    // Lấy hình với tên phim
+    const fetchMovieInfo = async movieID => {
+      const data = await movieApi.getById(movieID);
+      setMovieInfo(data);
+    };
+    fetchMovieInfo(movieID);
+  }, [movieID]);
+
   useEffect(() => {
     const getSeatsFromAPI = async scheduleID => {
       const seatsFromAPI = await showtimeApi.getSeatsFromSchedule(scheduleID); // {id : number, name: string, isOccupied: number (0,1)}
@@ -32,10 +73,7 @@ const BookingSeat = props => {
   }, [scheduleID]);
 
   const choosenSeatHandler = e => {
-    console.log(e.target.classList);
-    console.log('e.target.value', e.target.value);
-    console.log('e.target.name', e.target.name);
-
+    const seatButtons = document.querySelectorAll('.seat-button');
     const targetClassList = e.target.classList;
     targetClassList.toggle('notChosen');
     if (targetClassList.contains('notChosen')) {
@@ -44,9 +82,48 @@ const BookingSeat = props => {
       setTicketSeats(prevState =>
         prevState.filter(seat => seat.id !== Number(e.target.value))
       );
+      if (ticketSeats.length === 5) {
+        // - lấy những thằng đã được đặt
+        const bookedSeats = seats
+          .filter(seat => seat.isBooked)
+          .map(seat => seat.value); // [1,3,2]
+        const mapIDSeatTicket = ticketSeats.map(seat => seat.id);
+        seatButtons.forEach(btn => {
+          if (btn.hasAttribute('value')) {
+            const stringValue = btn.getAttribute('value'); // "1", "3"
+            // giờ thì bỏ disable những thằng không nằm trong  mapIDSeatTicket ở trên,
+            // những thằng mà đã được booked thì không được phép bỏ disable
+            if (
+              mapIDSeatTicket.indexOf(Number(stringValue)) === -1 &&
+              bookedSeats.indexOf(Number(stringValue)) === -1
+            ) {
+              btn.disabled = false;
+              btn.classList.remove('btn-secondary');
+              btn.classList.add('btn-outline-danger');
+            }
+          }
+        });
+      }
     } else {
       targetClassList.add('btn-danger');
       targetClassList.remove('btn-outline-danger');
+      if (ticketSeats.length === 4) {
+        // disable các nút kia vì chỉ tối đa đặt 5 ghế
+        const mapIDSeatTicket = ticketSeats.map(seat => seat.id);
+        seatButtons.forEach(btn => {
+          if (btn.hasAttribute('value')) {
+            const stringValue = btn.getAttribute('value');
+            if (
+              stringValue !== e.target.value &&
+              mapIDSeatTicket.indexOf(Number(stringValue)) === -1
+            ) {
+              btn.disabled = true;
+              btn.classList.remove('btn-outline-danger');
+              btn.classList.add('btn-secondary');
+            }
+          }
+        });
+      }
       setTicketSeats(prevState =>
         [
           ...prevState,
@@ -56,8 +133,16 @@ const BookingSeat = props => {
     }
   };
 
+  const dispatch = useDispatch();
+  const handleSubmitSeats = () => {
+    if (ticketSeats.length === 0) {
+      return;
+    }
+    ticketActions.addSeatsAction(dispatch, ticketSeats);
+  };
+
   return (
-    <Container className='my-4 mx-auto' style={{ maxWidth: '850px' }}>
+    <Container className='my-4 mx-auto' style={{ padding: '0 3rem' }}>
       <div className='header'>
         <h5
           className='bg-black text-white text-center text-uppercase p-2'
@@ -74,17 +159,20 @@ const BookingSeat = props => {
               className='px-2 fw-semibold'
               style={{ borderRight: '3px solid #000' }}
             >
-              CGV Hùng Vương Plaza
+              {scheduleInfo.branchName}
             </div>
             <div
               className='px-2 fw-semibold'
               style={{ borderRight: '3px solid #000' }}
             >
-              Cinema 5
+              {scheduleInfo.room.name}
             </div>
             <div className='px-2 fw-semibold'>Số ghế (260/260)</div>
           </div>
-          <div className='time px-2'>11/04/2023 20:30 ~ 11/04/2023 22:28</div>
+          <div className='time px-2'>
+            11/04/2023 20:30 ~ 11/04/2023 22:28
+            {`${scheduleInfo.startDate} ${scheduleInfo.startTime}`}
+          </div>
         </div>
       </div>
       <div className='body py-4'>
@@ -110,7 +198,7 @@ const BookingSeat = props => {
               return (
                 <button
                   key={index}
-                  className={className}
+                  className={`${className} seat-button`}
                   disabled={seat.isBooked}
                   style={{
                     width: '30px',
@@ -167,16 +255,71 @@ const BookingSeat = props => {
               </li>
             </ul>
           </div>
-          <div
-            className='booked-seats-and-total-money d-flex justify-content-around'
-            style={{ maxHeight: '100px' }}
-          >
+          <div className='booked-seats-and-total-money d-flex justify-content-around  gap-3'>
             <div className='booked-seats-and-total-money--movie-info d-flex gap-3'>
               <div className='left'>
-                <img src={MarioImage} alt='' width='100' />
+                <img src={movieInfo.smallImageURl} alt='' width='100' />
               </div>
-              <div className='right text-uppercase'>
-                phim anh em super mario
+              <div className='right text-uppercase'>{movieInfo.name}</div>
+            </div>
+            <div
+              className='booked-seats-and-total-money--schedule-info-seats '
+              style={{}}
+            >
+              <div className='d-flex gap-5'>
+                <div className='fs-small'>Rạp:</div>
+                <div className='fw-bold' style={{ marginLeft: '-3px' }}>
+                  {scheduleInfo.branchName}
+                </div>
+              </div>
+              <div className='d-flex gap-2 '>
+                <div className='fs-small'>Giờ chiếu:</div>
+                <div className='fw-bold'>{`${scheduleInfo.startTime.substring(
+                  0,
+                  scheduleInfo.startTime.lastIndexOf(':')
+                )}, ${scheduleInfo.startDate}`}</div>
+              </div>
+              <div className='d-flex gap-4'>
+                <div className='fs-small'>Phòng:</div>
+                <div
+                  className='fw-bold'
+                  style={{ marginLeft: '1px', fontWeight: 'bold' }}
+                >
+                  {scheduleInfo.room.name}
+                </div>
+              </div>
+              <div className='d-flex gap-4'>
+                <div className='fs-small'>Ghế:</div>
+                <div className='fw-bold' style={{ marginLeft: '15px' }}>
+                  {ticketSeats.length !== 0
+                    ? ticketSeats.reduce(
+                        (prev, cur) =>
+                          prev === ''
+                            ? prev + cur.name
+                            : prev + ', ' + cur.name,
+                        ''
+                      )
+                    : 'Bạn chưa chọn ghế nào.'}
+                </div>
+              </div>
+            </div>
+            <div className='booked-seats-and-total-money--total-money'>
+              <div className='d-flex gap-2'>
+                <div className='fs-small'>Giá mỗi vé:</div>
+                <div className='fw-bold'>
+                  {handleMoney(scheduleInfo.price)} VND
+                </div>
+              </div>
+              <div className='d-flex gap-2'>
+                <div className='fs-small'>Tổng tiền:</div>
+                <div className='fw-bold'>
+                  {handleMoney(ticketSeats.length * scheduleInfo.price)} VND
+                </div>
+              </div>
+              <div className='d-flex flex-row-reverse my-3'>
+                <button className='btn btn-success' onClick={handleSubmitSeats}>
+                  Tiếp tục
+                </button>
               </div>
             </div>
           </div>

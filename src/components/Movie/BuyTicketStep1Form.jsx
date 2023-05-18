@@ -11,7 +11,7 @@ import FormikControl from '../UI/FormikControl';
 const validate = values => {
   const errors = {};
   if (!values.time) {
-    errors.time = 'Xin vui lòng chọn ngày';
+    errors.time = 'Xin vui lòng chọn giờ';
   }
 
   return errors;
@@ -28,11 +28,6 @@ const BuyTicketStep1Form = () => {
   const [branchId, setBranchId] = useState(null);
   const [timeList, setTimeList] = useState([]);
 
-  const initialValues = {
-    date: now,
-    branch: branchId,
-    time: '',
-  };
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const onSubmitHandler = useCallback(
@@ -114,6 +109,11 @@ const BuyTicketStep1Form = () => {
     getScheduleFromMovieIdAndStartDate(date);
   }, [date, movieId]);
 
+  const initialValues = {
+    date: now,
+    branch: branchId,
+    time: '',
+  };
   return (
     <Formik
       initialValues={initialValues}
