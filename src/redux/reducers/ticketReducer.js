@@ -1,7 +1,7 @@
 const initialState = {
   movieId: '',
   scheduleID: '',
-  seats: [],
+  seats: [{ name: '', id: 1 }],
 };
 
 const ticketReducer = (state = initialState, action) => {

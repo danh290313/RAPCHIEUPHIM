@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import ScreenImage from '~/assets/Images/movies/booking/bg-screen.png';
 import * as ticketActions from '~/redux/actions/ticketActions';
 import movieApi from '../../../api/movieApi';
@@ -15,7 +16,7 @@ const initialScheduleInfo = {
   room: { name: '' },
 };
 
-const handleMoney = money => {
+export const handleMoney = money => {
   let total = '';
   const moneyString = String(money);
   let temp = '';
@@ -134,11 +135,15 @@ const BookingSeat = props => {
   };
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleSubmitSeats = () => {
     if (ticketSeats.length === 0) {
       return;
     }
     ticketActions.addSeatsAction(dispatch, ticketSeats);
+    navigate('/movie/ticket-payment', {
+      state: { movieInfo, scheduleInfo },
+    });
   };
 
   return (
@@ -317,9 +322,7 @@ const BookingSeat = props => {
                 </div>
               </div>
               <div className='d-flex flex-row-reverse my-3'>
-                <button className='btn btn-success' onClick={handleSubmitSeats}>
-                  Tiếp tục
-                </button>
+                <button onClick={handleSubmitSeats}>Tiếp tục</button>
               </div>
             </div>
           </div>

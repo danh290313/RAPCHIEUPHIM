@@ -11,5 +11,7 @@ const routes = {
   movieDetail: 'movie/movie-detail/:movieId',
   bookingSeat: 'movie/booking/seat',
   movie: 'phim/phimchieu',
+  ticketPayment: 'movie/ticket-payment',
+  qrCodeScan: 'movie/ticket-payment/qrcode',
 };
 export default routes;
