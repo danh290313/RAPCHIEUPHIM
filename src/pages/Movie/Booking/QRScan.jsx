@@ -1,15 +1,66 @@
-import { Card, Col, Divider, QRCode, Row, Space, Typography } from 'antd';
+import { Col, Divider, QRCode, Row, Space, Typography } from 'antd';
 import React, { useCallback, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import CGVImage from '~/assets/Images/cgv.png';
+import MomoImage from '~/assets/Images/momo.webp';
+import VisaImage from '~/assets/Images/visa.png';
+import DomesticCardImage from '~/assets/Images/atm-card.png';
+import ZaloPayImage from '~/assets/Images/zalopay.png';
+import ShopeePayImage from '~/assets/Images/shoppee.jpg';
 
 const leftStyle = {
   padding: '0 1rem',
   display: 'flex',
   flexDirection: 'column',
 };
-const afterFiveMinutesFromNow = new Date().getTime() + 10000;
+
+const imageStyle = {
+  height: '40px',
+  width: '40px',
+};
+const afterFiveMinutesFromNow = new Date().getTime() + 300000;
 const QRScan = () => {
   const [minutes, setMinutes] = useState('00');
   const [seconds, setSeconds] = useState('00');
+
+  const { state } = useLocation();
+
+  const paymentMethod = useSelector(state => state.ticket.paymentMethod);
+
+  console.log('typeof ', typeof paymentMethod);
+  console.log('payment method: ', paymentMethod);
+  let cardObj = { cardImage: '', cardText: '', cardColor: '' };
+  switch (paymentMethod) {
+    case 1:
+      cardObj.cardImage = DomesticCardImage;
+      cardObj.cardText = 'ATM ngân hàng nội địa';
+      cardObj.cardColor = '#13c2c2';
+      break;
+    case 2:
+      cardObj.cardImage = VisaImage;
+      cardObj.cardText = 'Visa, Master, Amex, JCB';
+      cardObj.cardColor = '#030852';
+      break;
+    case 3:
+      cardObj.cardImage = MomoImage;
+      cardObj.cardText = 'MoMo';
+      cardObj.cardColor = '#c41d7f';
+      break;
+    case 4:
+      cardObj.cardImage = ZaloPayImage;
+      cardObj.cardText = 'ZaloPay';
+      cardObj.cardColor = '#1677ff';
+      break;
+    case 5:
+      cardObj.cardImage = ShopeePayImage;
+      cardObj.cardText = 'Shopee Pay';
+      cardObj.cardColor = '#d4380d';
+      break;
+    default:
+      break;
+  }
+
   const countDown = useCallback(() => {
     const now = new Date().getTime();
     const second = 1000;
@@ -25,15 +76,15 @@ const QRScan = () => {
     setSeconds(textSecond);
   }, []);
   setInterval(countDown, 1000);
-  console.log('minutes', minutes);
-  console.log('second', seconds);
+  // console.log('minutes', minutes);
+  // console.log('second', seconds);
   let temp;
   if (parseInt(minutes) <= 0 && parseInt(seconds) <= 0) {
     temp = '00:00';
   } else {
     temp = `${minutes}:${seconds}`;
   }
-  console.log('🚀 ~ file: QRScan.jsx:43 ~ QRScan ~ temp:', temp);
+  // console.log('🚀 ~ file: QRScan.jsx:43 ~ QRScan ~ temp:', temp);
 
   return (
     <Row
@@ -51,7 +102,7 @@ const QRScan = () => {
               direction='vertical'
               style={{
                 display: 'flex',
-                background: '#AF206F',
+                background: cardObj.cardColor,
                 color: '#fff',
                 borderTopLeftRadius: '10px',
                 borderBottomLeftRadius: '10px',
@@ -103,7 +154,7 @@ const QRScan = () => {
                   Số tiền
                 </Typography.Text>
                 <Typography.Text style={{ color: '#fff', fontSize: '1.2rem' }}>
-                  210.000 VND
+                  {state.totalMoney} VND
                 </Typography.Text>
               </div>
               <hr />
@@ -138,8 +189,12 @@ const QRScan = () => {
               justifyContent: 'space-between',
             }}
           >
-            <div>CGV icon</div>
-            <div>MoMo icon</div>
+            <div>
+              <img src={CGVImage} alt='CGV Icon' />
+            </div>
+            <div>
+              <img src={cardObj.cardImage} alt='MoMo Icon' style={imageStyle} />
+            </div>
           </div>
           <Divider />
           <div
@@ -156,7 +211,8 @@ const QRScan = () => {
             </Typography.Title>
             <QRCode value={'http://localhost:8080/api/qrcode/1'} />
             <Typography.Paragraph style={{ marginTop: '1.5rem' }}>
-              Sử dụng App <Typography.Text strong>MoMo</Typography.Text> hoặc{' '}
+              Sử dụng App{' '}
+              <Typography.Text strong>{cardObj.cardText}</Typography.Text> hoặc{' '}
               <br />
               ứng dụng Camera hỗ trợ QR code để quét mã
             </Typography.Paragraph>

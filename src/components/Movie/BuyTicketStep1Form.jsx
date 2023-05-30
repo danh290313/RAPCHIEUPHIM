@@ -1,4 +1,5 @@
-import { Form, Formik } from 'formik';
+import { Formik } from 'formik';
+import { Form as AntdForm, Input, DatePicker } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -122,7 +123,10 @@ const BuyTicketStep1Form = () => {
     >
       {formik => {
         return (
-          <Form>
+          <AntdForm layout='vertical'>
+            <AntdForm.Item label='Chọn ngày'>
+              <DatePicker />
+            </AntdForm.Item>
             <FieldsetContainer legend='Chọn Ngày'>
               <FormikControl
                 name='date'
@@ -159,7 +163,7 @@ const BuyTicketStep1Form = () => {
                 chọn ngày khác.
               </div>
             )}
-          </Form>
+          </AntdForm>
         );
       }}
     </Formik>
