@@ -1,13 +1,15 @@
-import { Formik } from 'formik';
-import { Form as AntdForm, Input, DatePicker } from 'antd';
+import { Formik, Form } from 'formik';
+import { Form as AntdForm, Button } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
-import { Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import dayjs from 'dayjs';
+import dayOfYear from 'dayjs/plugin/dayOfYear';
 import * as TicketActions from '~/redux/actions/ticketActions';
 import showtimeApi from '../../api/showtimeApi';
-import FieldsetContainer from '../UI/FieldsetContainer/FieldsetContainer';
 import FormikControl from '../UI/FormikControl';
+
+dayjs.extend(dayOfYear);
 
 const validate = values => {
   const errors = {};
@@ -22,7 +24,7 @@ let scheduleWithSameName = {};
 const timeListObjOfEachBranch = {};
 
 const BuyTicketStep1Form = () => {
-  const now = new Date();
+  const now = dayjs();
   const [date, setDate] = useState(now);
   const movieId = useSelector(state => state.ticket.movieId);
   const [branchList, setBranchList] = useState([]);
@@ -74,10 +76,13 @@ const BuyTicketStep1Form = () => {
 
   useEffect(() => {
     const getScheduleFromMovieIdAndStartDate = async dateNotConvert => {
+      console.log('date not convert', dateNotConvert);
+      console.log('date to db', dateNotConvert.format('YYYY-MM-DD'));
       const data = await showtimeApi.getScheduleAndStartTime(
         movieId,
-        dateNotConvert.toISOString().substring(0, 10)
+        dateNotConvert.format('YYYY-MM-DD')
       );
+      console.log('data', data);
       // giờ lặp qua mảng  data để sắp xếp lại các shedule mà có cùng tên rạp -> (bỏ vào 1 mảng)
       scheduleWithSameName = {};
       data?.forEach(item => {
@@ -123,47 +128,49 @@ const BuyTicketStep1Form = () => {
     >
       {formik => {
         return (
-          <AntdForm layout='vertical'>
-            <AntdForm.Item label='Chọn ngày'>
-              <DatePicker />
-            </AntdForm.Item>
-            <FieldsetContainer legend='Chọn Ngày'>
-              <FormikControl
-                name='date'
-                control='date'
-                onChangeHandler={setDate}
-              />
-            </FieldsetContainer>
-            {branchList.length !== 0 ? (
-              <>
-                <FieldsetContainer legend='Chọn Rạp'>
-                  <FormikControl
-                    control='largeRadios'
-                    name='branch'
-                    options={branchList}
-                    onChangeHandler={setBranchId}
-                  />
-                </FieldsetContainer>
-                <FieldsetContainer legend='Chọn Khung Giờ'>
-                  <FormikControl
-                    control='largeRadios'
-                    name='time'
-                    options={timeList}
-                  />
-                </FieldsetContainer>
-                <div className='my-3 text-end'>
-                  <Button variant='success' type='submit'>
-                    Tiếp tục
-                  </Button>
+          <Form>
+            <AntdForm layout='vertical'>
+              <AntdForm.Item label='Chọn ngày'>
+                <FormikControl
+                  name='date'
+                  control='date'
+                  onChangeHandler={setDate}
+                />
+              </AntdForm.Item>
+              {branchList.length !== 0 ? (
+                <>
+                  <AntdForm.Item label='Chọn rạp'>
+                    <FormikControl
+                      control='largeRadios'
+                      name='branch'
+                      options={branchList}
+                      onChangeHandler={setBranchId}
+                    />
+                  </AntdForm.Item>
+                  <AntdForm.Item label='Chọn ngày'>
+                    <FormikControl
+                      control='largeRadios'
+                      name='time'
+                      options={timeList}
+                    />
+                  </AntdForm.Item>
+                </>
+              ) : (
+                <div>
+                  Ngày mà bạn đã chọn tạm thời chưa có lịch chiếu. Xin vui lòng
+                  chọn ngày khác.
                 </div>
-              </>
-            ) : (
-              <div>
-                Ngày mà bạn đã chọn tạm thời chưa có lịch chiếu. Xin vui lòng
-                chọn ngày khác.
-              </div>
-            )}
-          </AntdForm>
+              )}
+            </AntdForm>
+            <Button
+              type='primary'
+              hidden
+              id='btn-submit-step1'
+              htmlType='submit'
+            >
+              Tiếp tục
+            </Button>
+          </Form>
         );
       }}
     </Formik>

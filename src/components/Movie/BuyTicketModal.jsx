@@ -20,21 +20,17 @@ const BuyTicketModal = React.forwardRef((props, ref) => {
         title='Đặt vé xem phim'
         centered
         open={show}
-        onOk={() => console.log('ok modal clicked')}
+        onOk={() => {
+          const buttonElement = document.getElementById('btn-submit-step1');
+          console.log('btn element: ', buttonElement);
+          buttonElement.click();
+        }}
         onCancel={handleClose}
+        okText='Đặt vé'
+        cancelText='Hủy'
       >
         <BuyTicketStep1Form />
       </Modal>
-      {/* <Modal size='xl' show={show} onHide={handleClose} scrollable> */}
-      {/*   <Modal.Header closeButton style={{ backgroundColor: '#eee' }}> */}
-      {/*     <Modal.Title className='text-uppercase text-secondary'> */}
-      {/*       Đặt vé xem phim */}
-      {/*     </Modal.Title> */}
-      {/*   </Modal.Header> */}
-      {/*   <Modal.Body style={{ backgroundColor: '#eee' }}> */}
-      {/*     <BuyTicketStep1Form /> */}
-      {/*   </Modal.Body> */}
-      {/* </Modal> */}
     </>
   );
 });
