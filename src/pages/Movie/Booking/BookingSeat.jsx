@@ -6,6 +6,7 @@ import ScreenImage from '~/assets/Images/movies/booking/bg-screen.png';
 import * as ticketActions from '~/redux/actions/ticketActions';
 import movieApi from '../../../api/movieApi';
 import showtimeApi from '../../../api/showtimeApi';
+import { Button } from 'antd';
 
 const initialMovieInfo = { name: '', smallImageURl: '' };
 const initialScheduleInfo = {
@@ -134,6 +135,8 @@ const BookingSeat = props => {
     }
   };
 
+  const totalMoney = handleMoney(ticketSeats.length * scheduleInfo.price);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleSubmitSeats = () => {
@@ -142,7 +145,7 @@ const BookingSeat = props => {
     }
     ticketActions.addSeatsAction(dispatch, ticketSeats);
     navigate('/movie/ticket-payment', {
-      state: { movieInfo, scheduleInfo },
+      state: { movieInfo, scheduleInfo, totalMoney },
     });
   };
 
@@ -317,12 +320,12 @@ const BookingSeat = props => {
               </div>
               <div className='d-flex gap-2'>
                 <div className='fs-small'>Tổng tiền:</div>
-                <div className='fw-bold'>
-                  {handleMoney(ticketSeats.length * scheduleInfo.price)} VND
-                </div>
+                <div className='fw-bold'>{totalMoney} VND</div>
               </div>
               <div className='d-flex flex-row-reverse my-3'>
-                <button onClick={handleSubmitSeats}>Tiếp tục</button>
+                <Button type='primary' onClick={handleSubmitSeats}>
+                  Tiếp tục
+                </Button>
               </div>
             </div>
           </div>

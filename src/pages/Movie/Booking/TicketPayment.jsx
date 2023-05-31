@@ -10,10 +10,21 @@ import {
   Typography,
 } from 'antd';
 import Title from 'antd/es/typography/Title';
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { handleMoney } from './BookingSeat';
+import AtmCard from '~/assets/Images/atm-card.png';
+import VisaCard from '~/assets/Images/visa.png';
+import MomoCard from '~/assets/Images/momo.webp';
+import ZaloPay from '~/assets/Images/zalopay.png';
+import ShoppeePay from '~/assets/Images/shoppee.jpg';
+import * as ticketActions from '~/redux/actions/ticketActions';
+
+const imgStyle = {
+  width: '30px',
+  height: '30px',
+};
 
 const initialMovieInfo = { name: '', smallImageURl: '' };
 const initialScheduleInfo = {
@@ -27,7 +38,11 @@ const initialScheduleInfo = {
 const TicketPayment = () => {
   const [paymentMethod, setPaymentMethod] = useState(1);
   const {
-    state = { movieInfo: initialMovieInfo, scheduleInfo: initialScheduleInfo },
+    state = {
+      movieInfo: initialMovieInfo,
+      scheduleInfo: initialScheduleInfo,
+      totalMoney: 0,
+    },
   } = useLocation();
   const { movieInfo, scheduleInfo } = state;
   const ticketSeats = useSelector(state => state.ticket.seats);
@@ -40,8 +55,13 @@ const TicketPayment = () => {
   };
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const paymentHandler = e => {
-    navigate('/movie/ticket-payment/qrcode');
+    // lưu lại đã chọn cách thanh toán nào vào redux
+    ticketActions.addPaymentMethod(dispatch, paymentMethod);
+    navigate('/movie/ticket-payment/qrcode', {
+      state: { totalMoney: state.totalMoney },
+    });
   };
   return (
     <div style={{ padding: '2rem 0rem' }}>
@@ -67,11 +87,22 @@ const TicketPayment = () => {
               value={paymentMethod}
             >
               <Space direction='vertical'>
-                <Radio value={1}>ATM card (Thẻ nội địa)</Radio>
-                <Radio value={2}>Thẻ quốc tế (Visa, Master, Amex, JCB)</Radio>
-                <Radio value={3}>Ví MoMo</Radio>
-                <Radio value={4}>ZaloPay</Radio>
-                <Radio value={5}>ShopeePay</Radio>
+                <Radio value={1}>
+                  <img src={AtmCard} style={imgStyle} /> ATM card (Thẻ nội địa)
+                </Radio>
+                <Radio value={2}>
+                  <img src={VisaCard} style={imgStyle} /> Thẻ quốc tế (Visa,
+                  Master, Amex, JCB)
+                </Radio>
+                <Radio value={3}>
+                  <img src={MomoCard} style={imgStyle} /> Ví MoMo
+                </Radio>
+                <Radio value={4}>
+                  <img src={ZaloPay} style={imgStyle} /> ZaloPay
+                </Radio>
+                <Radio value={5}>
+                  <img src={ShoppeePay} style={imgStyle} /> ShopeePay
+                </Radio>
               </Space>
             </Radio.Group>
           </Card>
@@ -101,7 +132,7 @@ const TicketPayment = () => {
                   type='secondary'
                   style={{ paddingLeft: '1rem' }}
                 >
-                  210.000 VND
+                  {state.totalMoney} VND
                 </Typography.Text>
               </Card.Grid>
               <Card.Grid
@@ -112,7 +143,7 @@ const TicketPayment = () => {
                 }}
                 hoverable={false}
               >
-                <Typography.Text strong>210.000 VND</Typography.Text>
+                <Typography.Text strong>{state.totalMoney} VND</Typography.Text>
               </Card.Grid>
             </Card>
             <Card
@@ -132,7 +163,7 @@ const TicketPayment = () => {
               style={{ textAlign: 'center' }}
             >
               <Typography.Text strong style={{ textAlign: 'center' }}>
-                210.000 VND
+                {state.totalMoney} VND
               </Typography.Text>
             </Card>
           </Space>
@@ -157,7 +188,7 @@ const TicketPayment = () => {
               </Space>
               <Space direction='vertical'>
                 <Space>
-                  <Typography.Text>Rạp</Typography.Text>
+                  <Typography.Text>Rạp:</Typography.Text>
                   <Typography.Text>{scheduleInfo.branchName}</Typography.Text>
                 </Space>
                 <Space>
@@ -168,11 +199,11 @@ const TicketPayment = () => {
                   )}, ${scheduleInfo.startDate}`}</Typography.Text>
                 </Space>
                 <Space>
-                  <Typography.Text>Phòng chiếu</Typography.Text>
+                  <Typography.Text>Phòng chiếu:</Typography.Text>
                   <Typography.Text>{scheduleInfo.room.name}</Typography.Text>
                 </Space>
                 <Space>
-                  <Typography.Text>Ghế</Typography.Text>
+                  <Typography.Text>Ghế:</Typography.Text>
                   <Typography.Text>
                     {ticketSeats.length !== 0
                       ? ticketSeats.reduce(
@@ -191,20 +222,18 @@ const TicketPayment = () => {
               </div>
               <Space direction='vertical'>
                 <Space>
-                  <Typography.Text>Giá vé</Typography.Text>
+                  <Typography.Text>Giá vé:</Typography.Text>
                   <Typography.Text>
                     {handleMoney(scheduleInfo.price)} VND
                   </Typography.Text>
                 </Space>
                 <Space>
-                  <Typography.Text>Khuyến mãi</Typography.Text>
+                  <Typography.Text>Khuyến mãi:</Typography.Text>
                   <Typography.Text>0.00 VND</Typography.Text>
                 </Space>
                 <Space>
-                  <Typography.Text>Tổng tiền</Typography.Text>
-                  <Typography.Text>
-                    {handleMoney(ticketSeats.length * scheduleInfo.price)} VND
-                  </Typography.Text>
+                  <Typography.Text>Tổng tiền:</Typography.Text>
+                  <Typography.Text>{state.totalMoney} VND</Typography.Text>
                 </Space>
               </Space>
             </Space>

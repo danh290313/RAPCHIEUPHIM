@@ -15,7 +15,7 @@ const showtimeApi = {
     return axiosClient.get(url);
   },
   getScheduleByID: scheduleID => {
-    const url = `/schedule?id=${scheduleID}`;
+    const url = `/schedule-id?id=${scheduleID}`;
     return axiosClient.get(url);
   },
 

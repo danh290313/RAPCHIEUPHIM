@@ -9,3 +9,7 @@ export const addScheduleAction = (dispatch, payload) => {
 export const addSeatsAction = (dispatch, payload) => {
   dispatch({ type: 'ADD_SEATS', payload });
 };
+
+export const addPaymentMethod = (dispatch, payload) => {
+  dispatch({ type: 'ADD_PAYMENT_METHOD', payload });
+};

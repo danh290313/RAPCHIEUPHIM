@@ -1,6 +1,5 @@
 import React, { useEffect, useImperativeHandle, useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import { Button, Modal } from 'antd';
 import BuyTicketStep1Form from './BuyTicketStep1Form';
 
 const BuyTicketModal = React.forwardRef((props, ref) => {
@@ -17,15 +16,20 @@ const BuyTicketModal = React.forwardRef((props, ref) => {
 
   return (
     <>
-      <Modal size='xl' show={show} onHide={handleClose} scrollable>
-        <Modal.Header closeButton style={{ backgroundColor: '#eee' }}>
-          <Modal.Title className='text-uppercase text-secondary'>
-            Đặt vé xem phim
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body style={{ backgroundColor: '#eee' }}>
-          <BuyTicketStep1Form />
-        </Modal.Body>
+      <Modal
+        title='Đặt vé xem phim'
+        centered
+        open={show}
+        onOk={() => {
+          const buttonElement = document.getElementById('btn-submit-step1');
+          console.log('btn element: ', buttonElement);
+          buttonElement.click();
+        }}
+        onCancel={handleClose}
+        okText='Đặt vé'
+        cancelText='Hủy'
+      >
+        <BuyTicketStep1Form />
       </Modal>
     </>
   );
