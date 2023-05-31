@@ -1,8 +1,8 @@
-import PropTypes from "prop-types";
-import React from "react";
-import { FormGroup, Label } from "reactstrap";
-import styles from "./InputField.module.scss";
-import classNames from "classnames/bind";
+import PropTypes from 'prop-types';
+import React from 'react';
+import { FormGroup, Label } from 'reactstrap';
+import styles from './InputField.module.scss';
+import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 InputField.propTypes = {
   field: PropTypes.object.isRequired,
@@ -15,9 +15,9 @@ InputField.propTypes = {
 };
 
 InputField.defaultProps = {
-  type: "text",
-  label: "",
-  placeholder: "",
+  type: 'text',
+  label: '',
+  placeholder: '',
   disabled: false,
 };
 
@@ -40,11 +40,11 @@ function InputField(props) {
         disabled={disabled}
         placeholder={placeholder}
         invalid={showError}
-        className={cx("input", { invalid: showError })}
+        className={cx('input', { invalid: showError })}
         autoFocus={autoFocus}
       />
 
-      <span className={cx("error")}>{errors[name]}</span>
+      <span className={cx('error')}>{errors[name]}</span>
     </FormGroup>
   );
 }

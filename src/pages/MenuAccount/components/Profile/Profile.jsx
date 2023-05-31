@@ -8,8 +8,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
-import * as Yup from 'yup';
-import InputMuiField from '~/components/custom-fields/InputMuiField/InputMuiField';
+import InputField from '~/components/custom-fields/InputField';
 import SelectMuiField from '~/components/custom-fields/SelectMuiField/SelectMuiField';
 
 import { toastError, toastSuccess } from '~/utils/toast';
@@ -37,7 +36,6 @@ export function Profile() {
     const getUserInfo = async () => {
       try {
         const res = await authApi.getUserInfo(userId, token);
-
         setCustomer(res);
       } catch (error) {}
     };
@@ -73,8 +71,8 @@ export function Profile() {
     customer && (
       <div className={cx('wrapper')}>
         <ToastContainer />
-
-        <div className={cx('title')}>Thông tin cá nhân</div>
+        <h4 class='text-red-700 flex justify-center'>Thông tin cá nhân </h4>
+        {/* //<div className={cx('title')}>Thông tin cá nhân</div> */}
         <div className={cx('body')}>
           <Formik
             initialValues={initialValues}
@@ -91,7 +89,7 @@ export function Profile() {
                         <FormGroup>
                           <FastField
                             name='name'
-                            component={InputMuiField}
+                            component={InputField}
                             label='Họ & tên'
                           />
                         </FormGroup>
@@ -100,7 +98,7 @@ export function Profile() {
                         <FormGroup>
                           <Field
                             name='phoneNumber'
-                            component={InputMuiField}
+                            component={InputField}
                             label='Số điện thoại'
                           />
                         </FormGroup>
@@ -123,16 +121,20 @@ export function Profile() {
                         <FormGroup>
                           <Field
                             name='address'
-                            component={InputMuiField}
+                            component={InputField}
                             label='Địa chỉ'
                           />
                         </FormGroup>
                       </Grid>
                     </Grid>
-
-                    <Button type='submit' className={cx('btn-submit')}>
-                      Lưu thay đổi
-                    </Button>
+                    <div className={cx('btn-submit')}>
+                      <button
+                        type='submit'
+                        className='bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600'
+                      >
+                        Submit
+                      </button>
+                    </div>
                   </Form>
                 </>
               );

@@ -5,7 +5,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
-import FormLogin from './ModalLogin/FormLogin'
+import FormLogin from './ModalLogin/FormLogin';
 import FormRegister from './ModalRegister/FormRegister';
 
 function TabPanel(props) {
@@ -13,7 +13,7 @@ function TabPanel(props) {
 
   return (
     <div
-      role="tabpanel"
+      role='tabpanel'
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
@@ -51,10 +51,13 @@ export default function FormLoginResign() {
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="ĐĂNG NHẬP" {...a11yProps(0)} />
-          <Tab label="ĐĂNG KÝ" {...a11yProps(1)} />
-          
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label='basic tabs example'
+        >
+          <Tab label='ĐĂNG NHẬP' {...a11yProps(0)} />
+          <Tab label='ĐĂNG KÝ' {...a11yProps(1)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -63,7 +66,6 @@ export default function FormLoginResign() {
       <TabPanel value={value} index={1}>
         <FormRegister />
       </TabPanel>
-     
     </Box>
   );
 }
