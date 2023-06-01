@@ -5,6 +5,7 @@ const routes = {
   // productDetail: "/products/:id",
   // admin: "/admin",
   customerLogin: '/customer/login',
+  customerForgetPassword: 'forgetpassword',
   customerAccount: '/customer/*',
   // customer_register: "/customer/register"
   moviePlaying: 'movie/now-showing',

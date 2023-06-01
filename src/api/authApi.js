@@ -39,8 +39,8 @@ const authApi = {
   },
 
   resetPassword: data => {
-    const url = '/auth/resetPassword';
-    return axiosClient.post(url, data);
+    const url = '/reset-password?userName=';
+    return axiosClient.post(url + data);
   },
 
   changePassword: (data, token) => {

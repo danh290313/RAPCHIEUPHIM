@@ -6,18 +6,23 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Form as AntdForm, Button } from 'antd';
+import dayjs from 'dayjs';
 
 import InputField from '~/components/custom-fields/InputField';
 import { RegisterSchema } from '~/utils/schemas';
 import DatePickerField from '~/components/custom-fields/DatePickerField/DatePickerField';
 import styles from './FormRegister.module.scss';
 import { registerAction } from '~/redux/actions/authActions';
+import FormikControl from '~/components/UI/FormikControl';
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 
 function FormRegister() {
   // const { login, error, loading, currentUser } = useAuth();
   const [value, setValue] = useState();
+  const now = dayjs();
+  const [date, setDate] = useState(now);
   const username = useSelector(state => state.auth.username);
 
   const dispatch = useDispatch();
@@ -93,6 +98,14 @@ function FormRegister() {
                     inputFormat='DD/MM/YYYY'
                   />
                 </LocalizationProvider>
+
+                {/* <AntdForm.Item label='Chọn ngày'>
+                  <FormikControl
+                    name='date'
+                    control='date'
+                    onChangeHandler={setDate}
+                  />
+                </AntdForm.Item> */}
               </div>
 
               <div className={cx('w-full')}>
