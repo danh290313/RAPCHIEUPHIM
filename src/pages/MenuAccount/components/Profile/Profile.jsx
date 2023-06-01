@@ -24,6 +24,7 @@ const cx = classNames.bind(styles);
 
 export function Profile() {
   const currentUser = useSelector(state => state.auth.user);
+  console.log(currentUser);
   const token = currentUser?.accessToken;
 
   const nav = useNavigate();

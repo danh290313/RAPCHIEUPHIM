@@ -29,11 +29,7 @@ const publicRoutes = [
     component: MenuAccount,
     layout: DefaultLayout,
   },
-  {
-    path: config.routes.moviePlaying,
-    component: NowShowing,
-    layout: DefaultLayout,
-  },
+
   {
     path: config.routes.movieDetail,
     component: MovieDetail,
@@ -71,6 +67,12 @@ const publicRoutes = [
   // },
   // {path: config.routes.customer_register, component: Account, layout: DefaultLayout },
 ];
-const privateRoutes = [{}];
+const privateRoutes = [
+  {
+    path: config.routes.moviePlaying,
+    component: NowShowing,
+    layout: DefaultLayout,
+  },
+];
 
 export { privateRoutes, publicRoutes };
