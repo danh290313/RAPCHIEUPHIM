@@ -2,6 +2,7 @@ import { Navigate } from 'react-router-dom';
 import DefaultLayout from '~/layouts/DefaultLayout';
 import HomePage from '~/pages/HomePage/HomePage';
 import Login from '~/pages/Login/Login';
+import ForgetPassword from '~/pages/ForgetPassword/ForgetPassword';
 import MenuAccount from '../pages/MenuAccount/MenuAccount';
 import BookingSeat from '../pages/Movie/Booking/BookingSeat';
 import QRScan from '../pages/Movie/Booking/QRScan';
@@ -17,6 +18,12 @@ const publicRoutes = [
     component: Login,
     layout: DefaultLayout,
   },
+  {
+    path: config.routes.customerForgetPassword,
+    component: ForgetPassword,
+    layout: DefaultLayout,
+  },
+
   {
     path: config.routes.customerAccount,
     component: MenuAccount,
