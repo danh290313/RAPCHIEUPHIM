@@ -26,7 +26,7 @@ const MovieCard = props => {
       }}
     >
       <div style={{ flexGrow: 1 }}>
-        <div>
+        <div className='my-1'>
           <span
             className='fw-bold'
             style={{ color: 'black', fontSize: '1rem' }}
@@ -42,7 +42,7 @@ const MovieCard = props => {
           <span className='fw-semibold'>Thời lượng: </span>
           <span>{duration} phút</span>
         </div>
-        <div>
+        <div className='mb-5'>
           <span className='fw-semibold'>Khởi chiếu:</span>
           <span>{premiereDate}</span>
         </div>
@@ -50,6 +50,7 @@ const MovieCard = props => {
       <div style={{ flexGrow: 0 }}>
         <Button
           onClick={buyTicketBtnHandler}
+          className='blue-button'
           style={{ position: 'absolute', bottom: '20px', right: '10px' }}
           type='primary'
         >
@@ -59,22 +60,20 @@ const MovieCard = props => {
     </div>
   );
 
+  const imageCover = (
+    <Link to={`/movie/movie-detail/${movieId}`}>
+      <img src={image} style={{ width: '250px', height: '370px' }} />
+    </Link>
+  );
   return (
     <Fragment>
       {/* <LoadingModal />*/}
       <BuyTicketModal ref={modalRef} />
       <Card
         hoverable
-        style={{ width: '250px', height: '550px', position: 'relative' }}
-        cover={<img src={image} height='350' />}
+        style={{ width: '250px', height: '570px', position: 'relative' }}
+        cover={imageCover}
       >
-        {/* <Link to={`/movie/movie-detail/${movieId}`}> */}
-        {/*   <Card.Img */}
-        {/*     variant='top' */}
-        {/*     src={image} */}
-        {/*     className='border border-dark border-4 rounded-0' */}
-        {/*   /> */}
-        {/* </Link> */}
         <Card.Meta
           description={cardContent}
           style={{ fontSize: '0.8rem' }}

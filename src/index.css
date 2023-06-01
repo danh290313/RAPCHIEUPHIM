@@ -22,3 +22,7 @@ code {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.blue-button {
+  background-color: #1677ff !important;
+}

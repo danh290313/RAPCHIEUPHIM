@@ -28,6 +28,7 @@ const BuyTicketModal = React.forwardRef((props, ref) => {
         onCancel={handleClose}
         okText='Đặt vé'
         cancelText='Hủy'
+        okButtonProps={{ className: 'blue-button' }}
       >
         <BuyTicketStep1Form />
       </Modal>

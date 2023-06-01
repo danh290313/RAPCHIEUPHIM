@@ -16,6 +16,9 @@ const validate = values => {
   if (!values.time) {
     errors.time = 'Xin vui lòng chọn giờ';
   }
+  if (!values.branch) {
+    errors.branch = 'Xin vui lòng chọn rạp';
+  }
 
   return errors;
 };
