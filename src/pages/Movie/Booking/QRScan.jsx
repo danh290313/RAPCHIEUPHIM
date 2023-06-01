@@ -20,6 +20,7 @@ const imageStyle = {
   width: '40px',
 };
 const afterFiveMinutesFromNow = new Date().getTime() + 300000;
+
 const QRScan = () => {
   const [minutes, setMinutes] = useState('00');
   const [seconds, setSeconds] = useState('00');
