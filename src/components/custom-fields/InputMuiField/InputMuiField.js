@@ -1,10 +1,10 @@
-import PropTypes from "prop-types";
-import React, { useMemo } from "react";
-import { FormGroup, Label } from "reactstrap";
-import styles from "./InputMuiFied.module.scss";
-import classNames from "classnames/bind";
-import { TextField } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import PropTypes from 'prop-types';
+import React, { useMemo } from 'react';
+import { FormGroup, Label } from 'reactstrap';
+import styles from './InputMuiFied.module.scss';
+import classNames from 'classnames/bind';
+import { TextField } from '@mui/material';
+import { styled } from '@mui/material/styles';
 const cx = classNames.bind(styles);
 InputMuiFied.propTypes = {
   field: PropTypes.object.isRequired,
@@ -17,9 +17,9 @@ InputMuiFied.propTypes = {
 };
 
 InputMuiFied.defaultProps = {
-  type: "text",
-  label: "",
-  placeholder: "",
+  type: 'text',
+  label: '',
+  placeholder: '',
   disabled: false,
 };
 // const CssTextField = styled(TextField)({
@@ -53,32 +53,32 @@ function InputMuiFied(props) {
     <FormGroup>
       <TextField
         label={label}
-        disabled={disabled}
+        //disabled={disabled}
         placeholder={placeholder}
         type={type}
         autoFocus={autoFocus}
         sx={{
-          "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+          '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
             border: showError
-              ? "1px solid red"
-              : "var(--cool-border) !important",
+              ? '1px solid red'
+              : 'var(--cool-border) !important',
           },
-          "& .css-1sumxir-MuiFormLabel-root-MuiInputLabel-root.Mui-focused": {
-            color: "var(--primary)",
+          '& .css-1sumxir-MuiFormLabel-root-MuiInputLabel-root.Mui-focused': {
+            color: 'var(--primary)',
           },
-          "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
+          '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
             border: showError
-              ? "1px solid red"
-              : "2px solid var(--primary) !important",
+              ? '1px solid red'
+              : '2px solid var(--primary) !important',
           },
-          "& .MuiOutlinedInput-root:hover fieldset": {
-            borderColor: !showError && "#333 !important",
+          '& .MuiOutlinedInput-root:hover fieldset': {
+            borderColor: !showError && '#333 !important',
           },
         }}
         InputLabelProps={{
           style: {
             // fontSize: "1.4rem",
-            color: showError && "red",
+            color: showError && 'red',
           },
           shrink: true,
         }}
@@ -86,12 +86,12 @@ function InputMuiFied(props) {
         InputProps={{
           style: {
             // fontSize: "1.4rem",
-            borderColor: showError ? "red" : "#333",
+            borderColor: showError ? 'red' : '#333',
           },
           ...field,
         }}
       />
-      {showError && <span className={cx("error")}>{errors[name]}</span>}
+      {showError && <span className={cx('error')}>{errors[name]}</span>}
     </FormGroup>
   );
 }

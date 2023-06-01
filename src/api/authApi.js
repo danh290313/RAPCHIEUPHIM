@@ -17,6 +17,19 @@ const authApi = {
       headers: { Authorization: 'Bearer ' + token },
     });
   },
+  getHistory: (userId, token) => {
+    const url = '/scheduleByUserId?id=';
+    return axiosClient.get(url + userId, {
+      headers: { Authorization: 'Bearer ' + token },
+    });
+  },
+
+  getHistorySearch: (userId, search, token) => {
+    const url = '/scheduleByUserId?id=';
+    return axiosClient.get(url + userId + `&q=` + search, {
+      headers: { Authorization: 'Bearer ' + token },
+    });
+  },
 
   updateUserInfo: (id, formData, token) => {
     const url = '/customer/';

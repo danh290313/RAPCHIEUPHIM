@@ -1,3 +1,5 @@
+import { ToastContainer } from 'react-toastify';
+
 import MovieSlide from '~/components/MovieSlide/MovieSlide';
 import { useEffect } from 'react';
 import movieApi from '../../api/movieApi';
@@ -13,8 +15,8 @@ const cx = classNames.bind(styles);
 function HomePage() {
   return (
     <div className={cx('wrapper')}>
+      <ToastContainer />
       <HeaderMenu />
-
       <div className={cx('silde_show')}>
         <Banner />
       </div>

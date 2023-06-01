@@ -1,11 +1,15 @@
+import { ToastContainer } from 'react-toastify';
+
 import FormLoginResign from '../../components/Modal/FormLoginResign';
 import styles from './Login.module.scss';
+
 import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 
 function Login() {
   return (
     <div className={cx('swapper')}>
+      <ToastContainer />
       <div className={cx('login')}>
         <FormLoginResign />
       </div>
