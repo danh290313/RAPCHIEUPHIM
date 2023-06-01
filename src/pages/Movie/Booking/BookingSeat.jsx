@@ -6,7 +6,8 @@ import ScreenImage from '~/assets/Images/movies/booking/bg-screen.png';
 import * as ticketActions from '~/redux/actions/ticketActions';
 import movieApi from '../../../api/movieApi';
 import showtimeApi from '../../../api/showtimeApi';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
+import dayjs from 'dayjs';
 
 const initialMovieInfo = { name: '', smallImageURl: '' };
 const initialScheduleInfo = {
@@ -74,6 +75,13 @@ const BookingSeat = props => {
     getSeatsFromAPI(scheduleID);
   }, [scheduleID]);
 
+  const duration = useSelector(state => state?.ticket?.duration);
+  const startDateTime = scheduleInfo.startDate + ' ' + scheduleInfo.startTime;
+  const startDateTimeBefore = dayjs(startDateTime).format('DD/MM/YYYY HH:mm');
+  const startDateTimeAfter = dayjs(startDateTime)
+    .add(duration, 'm')
+    .format('DD/MM/YYYY HH:mm');
+
   const choosenSeatHandler = e => {
     const seatButtons = document.querySelectorAll('.seat-button');
     const targetClassList = e.target.classList;
@@ -110,6 +118,7 @@ const BookingSeat = props => {
       targetClassList.add('btn-danger');
       targetClassList.remove('btn-outline-danger');
       if (ticketSeats.length === 4) {
+        message.info('Một vé chỉ được đặt tối đa 5 ghế');
         // disable các nút kia vì chỉ tối đa đặt 5 ghế
         const mapIDSeatTicket = ticketSeats.map(seat => seat.id);
         seatButtons.forEach(btn => {
@@ -141,6 +150,7 @@ const BookingSeat = props => {
   const navigate = useNavigate();
   const handleSubmitSeats = () => {
     if (ticketSeats.length === 0) {
+      message.error('Xin vui lòng chọn ghế');
       return;
     }
     ticketActions.addSeatsAction(dispatch, ticketSeats);
@@ -169,17 +179,10 @@ const BookingSeat = props => {
             >
               {scheduleInfo.branchName}
             </div>
-            <div
-              className='px-2 fw-semibold'
-              style={{ borderRight: '3px solid #000' }}
-            >
-              {scheduleInfo.room.name}
-            </div>
-            <div className='px-2 fw-semibold'>Số ghế (260/260)</div>
+            <div className='px-2 fw-semibold'>{scheduleInfo.room.name}</div>
           </div>
           <div className='time px-2'>
-            11/04/2023 20:30 ~ 11/04/2023 22:28
-            {`${scheduleInfo.startDate} ${scheduleInfo.startTime}`}
+            {startDateTimeBefore} ~ {startDateTimeAfter}
           </div>
         </div>
       </div>
@@ -263,32 +266,30 @@ const BookingSeat = props => {
               </li>
             </ul>
           </div>
-          <div className='booked-seats-and-total-money d-flex justify-content-around  gap-3'>
+          <div className='booked-seats-and-total-money d-flex justify-content-between rounded border-2 bg-white shadow-gray-50 shadow'>
             <div className='booked-seats-and-total-money--movie-info d-flex gap-3'>
-              <div className='left'>
+              <div className='left '>
                 <img src={movieInfo.smallImageURl} alt='' width='100' />
               </div>
-              <div className='right text-uppercase'>{movieInfo.name}</div>
+              <div className='right text-uppercase pt-3'>{movieInfo.name}</div>
             </div>
-            <div
-              className='booked-seats-and-total-money--schedule-info-seats '
-              style={{}}
-            >
-              <div className='d-flex gap-5'>
-                <div className='fs-small'>Rạp:</div>
-                <div className='fw-bold' style={{ marginLeft: '-3px' }}>
-                  {scheduleInfo.branchName}
+            <div className='booked-seats-and-total-money--schedule-info-seats pt-3'>
+              <div className='d-flex'>
+                <div className='fs-small' style={{ paddingRight: '60px' }}>
+                  Rạp:
                 </div>
+                <div className='fw-bold'>{scheduleInfo.branchName}</div>
               </div>
               <div className='d-flex gap-2 '>
                 <div className='fs-small'>Giờ chiếu:</div>
-                <div className='fw-bold'>{`${scheduleInfo.startTime.substring(
-                  0,
-                  scheduleInfo.startTime.lastIndexOf(':')
-                )}, ${scheduleInfo.startDate}`}</div>
+                <div className='fw-bold'>{`${scheduleInfo.startTime}, ${dayjs(
+                  scheduleInfo.startDate
+                ).format('DD/MM/YYYY')}`}</div>
               </div>
               <div className='d-flex gap-4'>
-                <div className='fs-small'>Phòng:</div>
+                <div className='fs-small' style={{ paddingRight: '20px' }}>
+                  Phòng:
+                </div>
                 <div
                   className='fw-bold'
                   style={{ marginLeft: '1px', fontWeight: 'bold' }}
@@ -297,7 +298,9 @@ const BookingSeat = props => {
                 </div>
               </div>
               <div className='d-flex gap-4'>
-                <div className='fs-small'>Ghế:</div>
+                <div className='fs-small' style={{ paddingRight: '22px' }}>
+                  Ghế:
+                </div>
                 <div className='fw-bold' style={{ marginLeft: '15px' }}>
                   {ticketSeats.length !== 0
                     ? ticketSeats.reduce(
@@ -311,7 +314,7 @@ const BookingSeat = props => {
                 </div>
               </div>
             </div>
-            <div className='booked-seats-and-total-money--total-money'>
+            <div className='booked-seats-and-total-money--total-money pt-3 pe-3'>
               <div className='d-flex gap-2'>
                 <div className='fs-small'>Giá mỗi vé:</div>
                 <div className='fw-bold'>
@@ -323,7 +326,11 @@ const BookingSeat = props => {
                 <div className='fw-bold'>{totalMoney} VND</div>
               </div>
               <div className='d-flex flex-row-reverse my-3'>
-                <Button type='primary' onClick={handleSubmitSeats}>
+                <Button
+                  type='primary'
+                  className='blue-button'
+                  onClick={handleSubmitSeats}
+                >
                   Tiếp tục
                 </Button>
               </div>

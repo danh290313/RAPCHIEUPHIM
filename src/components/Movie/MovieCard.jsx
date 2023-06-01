@@ -14,6 +14,7 @@ const MovieCard = props => {
   const buyTicketBtnHandler = () => {
     // Lưu vào redux id phim và fetch chi nhánh, giờ chiếu phim  từ id phim
     TicketActions.addMovieAction(dispatch, movieId);
+    TicketActions.addMovieDurationAction(dispatch, duration);
     modalRef.current.showModal();
   };
 

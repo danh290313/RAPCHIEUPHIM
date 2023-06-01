@@ -9,6 +9,7 @@ import {
   Space,
   Typography,
 } from 'antd';
+import dayjs from 'dayjs';
 import Title from 'antd/es/typography/Title';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -88,20 +89,36 @@ const TicketPayment = () => {
             >
               <Space direction='vertical'>
                 <Radio value={1}>
-                  <img src={AtmCard} style={imgStyle} /> ATM card (Thẻ nội địa)
+                  <div className='flex items-center'>
+                    <img src={AtmCard} style={imgStyle} />
+                    <span className='block ps-1'>ATM card (Thẻ nội địa)</span>
+                  </div>
                 </Radio>
                 <Radio value={2}>
-                  <img src={VisaCard} style={imgStyle} /> Thẻ quốc tế (Visa,
-                  Master, Amex, JCB)
+                  <div className='flex items-center'>
+                    <img src={VisaCard} style={imgStyle} />
+                    <span className='block ps-1'>
+                      Thẻ quốc tế (Visa, Master, Amex, JCB)
+                    </span>
+                  </div>
                 </Radio>
                 <Radio value={3}>
-                  <img src={MomoCard} style={imgStyle} /> Ví MoMo
+                  <div className='flex items-center'>
+                    <img src={MomoCard} style={imgStyle} />
+                    <span className='block ps-1'>Ví MoMo</span>
+                  </div>
                 </Radio>
                 <Radio value={4}>
-                  <img src={ZaloPay} style={imgStyle} /> ZaloPay
+                  <div className='flex items-center'>
+                    <img src={ZaloPay} style={imgStyle} />
+                    <span className='block ps-1'>ZaloPay</span>
+                  </div>
                 </Radio>
                 <Radio value={5}>
-                  <img src={ShoppeePay} style={imgStyle} /> ShopeePay
+                  <div className='flex items-center'>
+                    <img src={ShoppeePay} style={imgStyle} />
+                    <span className='block ps-1'>ShopeePay</span>
+                  </div>
                 </Radio>
               </Space>
             </Radio.Group>
@@ -130,7 +147,7 @@ const TicketPayment = () => {
               >
                 <Typography.Text
                   type='secondary'
-                  style={{ paddingLeft: '1rem' }}
+                  style={{ paddingLeft: '40px' }}
                 >
                   {state.totalMoney} VND
                 </Typography.Text>
@@ -169,82 +186,75 @@ const TicketPayment = () => {
           </Space>
         </Col>
       </Row>
-      <Card size='small' style={{ marginTop: '2rem' }}>
-        <Row align='top'>
-          <Col span={2}>col-2</Col>
-          <Col span={20}>
-            <Space direction='horizontal' align='start'>
-              <Space
-                style={{ borderRight: '1x dashed #000', maxWidth: '350px' }}
-                align='start'
-              >
-                <Image height={150} src={movieInfo.smallImageURl} />
-                <Typography.Text
-                  style={{ textTransform: 'uppercase' }}
-                  type='secondary'
-                >
-                  {movieInfo.name}
-                </Typography.Text>
-              </Space>
-              <Space direction='vertical'>
-                <Space>
-                  <Typography.Text>Rạp:</Typography.Text>
-                  <Typography.Text>{scheduleInfo.branchName}</Typography.Text>
-                </Space>
-                <Space>
-                  <Typography.Text>Suất chiếu</Typography.Text>
-                  <Typography.Text>{`${scheduleInfo.startTime.substring(
-                    0,
-                    scheduleInfo.startTime.lastIndexOf(':')
-                  )}, ${scheduleInfo.startDate}`}</Typography.Text>
-                </Space>
-                <Space>
-                  <Typography.Text>Phòng chiếu:</Typography.Text>
-                  <Typography.Text>{scheduleInfo.room.name}</Typography.Text>
-                </Space>
-                <Space>
-                  <Typography.Text>Ghế:</Typography.Text>
-                  <Typography.Text>
-                    {ticketSeats.length !== 0
-                      ? ticketSeats.reduce(
-                          (prev, cur) =>
-                            prev === ''
-                              ? prev + cur.name
-                              : prev + ', ' + cur.name,
-                          ''
-                        )
-                      : 'Bạn chưa chọn ghế nào.'}
-                  </Typography.Text>
-                </Space>
-              </Space>
-              <div className=''>
-                <Divider type='vertical' />
-              </div>
-              <Space direction='vertical'>
-                <Space>
-                  <Typography.Text>Giá vé:</Typography.Text>
-                  <Typography.Text>
-                    {handleMoney(scheduleInfo.price)} VND
-                  </Typography.Text>
-                </Space>
-                <Space>
-                  <Typography.Text>Khuyến mãi:</Typography.Text>
-                  <Typography.Text>0.00 VND</Typography.Text>
-                </Space>
-                <Space>
-                  <Typography.Text>Tổng tiền:</Typography.Text>
-                  <Typography.Text>{state.totalMoney} VND</Typography.Text>
-                </Space>
-              </Space>
-            </Space>
-          </Col>
-          <Col span={2} flex>
-            <Button type='primary' onClick={paymentHandler}>
-              Thanh toán
+      <div
+        className='booked-seats-and-total-money d-flex justify-content-between rounded border-2 bg-white shadow-gray-50 shadow mx-auto my-3'
+        style={{ maxWidth: '924px' }}
+      >
+        <div className='booked-seats-and-total-money--movie-info d-flex gap-3'>
+          <div className='left '>
+            <img src={movieInfo.smallImageURl} alt='' width='100' />
+          </div>
+          <div className='right text-uppercase pt-3'>{movieInfo.name}</div>
+        </div>
+        <div className='booked-seats-and-total-money--schedule-info-seats pt-3'>
+          <div className='d-flex'>
+            <div className='fs-small' style={{ paddingRight: '60px' }}>
+              Rạp:
+            </div>
+            <div className='fw-bold'>{scheduleInfo.branchName}</div>
+          </div>
+          <div className='d-flex gap-2 '>
+            <div className='fs-small'>Giờ chiếu:</div>
+            <div className='fw-bold'>{`${scheduleInfo.startTime}, ${dayjs(
+              scheduleInfo.startDate
+            ).format('DD/MM/YYYY')}`}</div>
+          </div>
+          <div className='d-flex gap-4'>
+            <div className='fs-small' style={{ paddingRight: '20px' }}>
+              Phòng:
+            </div>
+            <div
+              className='fw-bold'
+              style={{ marginLeft: '1px', fontWeight: 'bold' }}
+            >
+              {scheduleInfo.room.name}
+            </div>
+          </div>
+          <div className='d-flex gap-4'>
+            <div className='fs-small' style={{ paddingRight: '22px' }}>
+              Ghế:
+            </div>
+            <div className='fw-bold' style={{ marginLeft: '15px' }}>
+              {ticketSeats.length !== 0
+                ? ticketSeats.reduce(
+                    (prev, cur) =>
+                      prev === '' ? prev + cur.name : prev + ', ' + cur.name,
+                    ''
+                  )
+                : 'Bạn chưa chọn ghế nào.'}
+            </div>
+          </div>
+        </div>
+        <div className='booked-seats-and-total-money--total-money pt-3 pe-3'>
+          <div className='d-flex gap-2'>
+            <div className='fs-small'>Giá mỗi vé:</div>
+            <div className='fw-bold'>{handleMoney(scheduleInfo.price)} VND</div>
+          </div>
+          <div className='d-flex gap-2'>
+            <div className='fs-small'>Tổng tiền:</div>
+            <div className='fw-bold'>{state.totalMoney} VND</div>
+          </div>
+          <div className='d-flex flex-row-reverse my-3'>
+            <Button
+              type='primary'
+              className='blue-button'
+              onClick={paymentHandler}
+            >
+              Tiếp tục
             </Button>
-          </Col>
-        </Row>
-      </Card>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

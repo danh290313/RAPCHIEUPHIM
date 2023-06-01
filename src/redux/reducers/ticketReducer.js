@@ -1,8 +1,9 @@
 const initialState = {
   movieId: '',
   scheduleID: '',
-  seats: [{ name: '', id: 1 }],
-  paymentMethod: 'ZaloPay',
+  seats: [],
+  paymentMethod: '',
+  duration: '',
 };
 
 const ticketReducer = (state = initialState, action) => {
@@ -27,6 +28,11 @@ const ticketReducer = (state = initialState, action) => {
       return {
         ...state,
         paymentMethod: payload,
+      };
+    case 'ADD_MOVIE_DURATION':
+      return {
+        ...state,
+        duration: payload,
       };
     default:
       return state;

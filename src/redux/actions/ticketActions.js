@@ -13,3 +13,7 @@ export const addSeatsAction = (dispatch, payload) => {
 export const addPaymentMethod = (dispatch, payload) => {
   dispatch({ type: 'ADD_PAYMENT_METHOD', payload });
 };
+
+export const addMovieDurationAction = (dispatch, payload) => {
+  dispatch({ type: 'ADD_MOVIE_DURATION', payload });
+};
