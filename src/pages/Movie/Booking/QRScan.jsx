@@ -1,22 +1,16 @@
 import { LoadingOutlined } from '@ant-design/icons';
 import {
   Spin,
+  Modal,
   Typography,
   Col,
   Divider,
   QRCode,
   Row,
   Space,
-  Modal,
   message,
 } from 'antd';
-import React, {
-  Fragment,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CGVImage from '~/assets/Images/cgv.png';
@@ -69,9 +63,9 @@ const failedPaidNavigateContent = (
 let invalid = false;
 
 const QRScan = () => {
-  const afterFiveMinutesFromNow = new Date().getTime() + 300000;
+  const afterFiveMinutesFromNow = new Date().getTime() + 60000;
   const [isPaid, setIsPaid] = useState(false);
-  const [minutes, setMinutes] = useState('05');
+  const [minutes, setMinutes] = useState('01');
   const [seconds, setSeconds] = useState('00');
   const [invalidateTime, setInvalidateTime] = useState(false);
 
@@ -139,7 +133,7 @@ const QRScan = () => {
     };
   }, [countDown]);
 
-  // tạo Interval tới db cứ mỗi 1s để kiểm tra là đã thanh toán chưa
+  // tạo Interval tới db cứ mỗi 3s để kiểm tra là đã thanh toán chưa
   const fetchBillStatus = async id => {
     const data = await ticketApi.getBillStatus(id);
 
@@ -165,7 +159,8 @@ const QRScan = () => {
   // Thông báo
   const navigate = useNavigate();
   if (isPaid) {
-    message.success(sucessfulPaidNavigateContent, 5, () => {
+    invalid = false;
+    message.success(sucessfulPaidNavigateContent, 3, () => {
       navigate('/customer/profiledetails', { replace: true });
     });
   }
@@ -173,13 +168,49 @@ const QRScan = () => {
   const movieId = useSelector(state => state.ticket.movieId);
   useEffect(() => {
     if (invalid) {
-      invalid = false;
       setInvalidateTime(true);
-      message.error(failedPaidNavigateContent, 5, () => {
+      message.error(failedPaidNavigateContent, 3, () => {
+        invalid = false;
         navigate(`/movie/movie-detail/${movieId}`, { replace: true });
       });
     }
   }, [invalid, navigate, movieId]);
+
+  // khi user ấn nút quay lại, hoặc chuyển đi trang khác khi mà chưa thanh toán xong :
+  const onOkHandler = () => {
+    // setInvalidateTime(true);
+    // your logic
+    invalid = false;
+    navigate('/');
+  };
+  const onCancelHandler = () => {
+    window.history.pushState(null, null, window.location.pathname);
+
+    invalid = false;
+    // setInvalidateTime(false);
+  };
+  const onBackButtonEvent = e => {
+    e.preventDefault();
+    if (!invalidateTime) {
+      Modal.warning({
+        title: 'Bạn có chắc là muốn rồi đi ? ',
+        content:
+          'Sau khi rời đi thì hóa đơn sẽ lập tức bị hủy. Bạn có chắc chắn ?',
+        onOk: onOkHandler,
+        onCancel: onCancelHandler,
+        okCancel: true,
+        okButtonProps: { className: 'blue-button' },
+      });
+    }
+  };
+
+  useEffect(() => {
+    window.history.pushState(null, null, window.location.pathname);
+    window.addEventListener('popstate', onBackButtonEvent);
+    return () => {
+      window.removeEventListener('popstate', onBackButtonEvent);
+    };
+  }, []);
 
   return (
     <Fragment>
@@ -254,7 +285,7 @@ const QRScan = () => {
                   <Typography.Text
                     style={{ color: '#fff', fontSize: '1.2rem' }}
                   >
-                    {state.totalMoney} VND
+                    {state?.totalMoney} VND
                   </Typography.Text>
                 </div>
                 <hr />

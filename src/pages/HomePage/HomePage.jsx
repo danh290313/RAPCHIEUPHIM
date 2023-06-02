@@ -9,10 +9,13 @@ import classNames from 'classnames/bind';
 import styles from './HomePage.module.scss';
 import { Image } from 'react-bootstrap';
 import HeaderMenu from '~/layouts/components/HeaderMenu';
+import { useSelector } from 'react-redux';
 
 const cx = classNames.bind(styles);
 
 function HomePage() {
+  const movieId = useSelector(state => state.ticket.movieId);
+  console.log('movieId: ', movieId);
   return (
     <div className={cx('wrapper')}>
       <ToastContainer />
