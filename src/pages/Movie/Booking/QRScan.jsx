@@ -1,13 +1,31 @@
-import { Col, Divider, QRCode, Row, Space, Typography } from 'antd';
-import React, { useCallback, useState } from 'react';
+import { LoadingOutlined } from '@ant-design/icons';
+import {
+  Spin,
+  Typography,
+  Col,
+  Divider,
+  QRCode,
+  Row,
+  Space,
+  Modal,
+  message,
+} from 'antd';
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import CGVImage from '~/assets/Images/cgv.png';
 import MomoImage from '~/assets/Images/momo.webp';
 import VisaImage from '~/assets/Images/visa.png';
 import DomesticCardImage from '~/assets/Images/atm-card.png';
 import ZaloPayImage from '~/assets/Images/zalopay.png';
 import ShopeePayImage from '~/assets/Images/shoppee.jpg';
+import ticketApi from '../../../api/ticketApi';
 
 const leftStyle = {
   padding: '0 1rem',
@@ -20,14 +38,41 @@ const imageStyle = {
   width: '40px',
 };
 
+const antIcon = (
+  <LoadingOutlined
+    style={{
+      fontSize: 24,
+    }}
+    spin
+  />
+);
+
+const sucessfulPaidNavigateContent = (
+  <>
+    <Typography.Text>
+      Bạn đã thanh toán thành công. Đang chuyển hướng đến danh sách các vé
+    </Typography.Text>
+    <div style={{ textAlign: 'center' }}>
+      <Spin indicator={antIcon} />
+    </div>
+  </>
+);
+
 const QRScan = () => {
   const afterFiveMinutesFromNow = new Date().getTime() + 300000;
+  const [isPaid, setIsPaid] = useState(false);
   const [minutes, setMinutes] = useState('00');
   const [seconds, setSeconds] = useState('00');
 
   const { state } = useLocation();
 
   const paymentMethod = useSelector(state => state.ticket.paymentMethod);
+
+  // destroy tất cả modal trước khi chuyển trang
+  const location = useLocation();
+  useEffect(() => {
+    Modal.destroyAll();
+  }, [location]);
 
   console.log('typeof ', typeof paymentMethod);
   console.log('payment method: ', paymentMethod);
@@ -63,6 +108,9 @@ const QRScan = () => {
   }
 
   const countDown = useCallback(() => {
+    if (isPaid) {
+      return;
+    }
     const now = new Date().getTime();
     const second = 1000;
     const minute = second * 60;
@@ -75,152 +123,200 @@ const QRScan = () => {
     if (Number(textMinute) < 0 && Number(textSecond) < 0) return;
     setMinutes(textMinute);
     setSeconds(textSecond);
-  }, []);
-  setInterval(countDown, 1000);
-  // console.log('minutes', minutes);
-  // console.log('second', seconds);
+  }, [isPaid]);
+
+  useEffect(() => {
+    const timeInterval = setInterval(countDown, 1000, 1000);
+
+    return () => {
+      clearInterval(timeInterval);
+      console.log('clearInterval: ', timeInterval);
+    };
+  }, [countDown]);
+
+  // tạo Interval tới db cứ mỗi 1s để kiểm tra là đã thanh toán chưa
+  const fetchBillStatus = async id => {
+    const data = await ticketApi.getBillStatus(id);
+
+    const { isPaied } = data;
+    if (isPaied) setIsPaid(true);
+  };
+
+  useEffect(() => {
+    if (!isPaid) {
+      const intervalId = setInterval(fetchBillStatus.bind(null, 1), 3000);
+      return () => clearInterval(intervalId);
+    } else {
+    }
+  }, [isPaid]);
+
   let temp;
   if (parseInt(minutes) <= 0 && parseInt(seconds) <= 0) {
     temp = '00:00';
+    // navigate trang vì đã hết hạn
   } else {
     temp = `${minutes}:${seconds}`;
   }
-  // console.log('🚀 ~ file: QRScan.jsx:43 ~ QRScan ~ temp:', temp);
 
+  // Thông báo
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isPaid) {
+      message.success(sucessfulPaidNavigateContent, 5, () => {
+        navigate('/customer/profiledetails', { replace: true });
+      });
+    }
+  }, [isPaid, navigate]);
+  // console.log('🚀 ~ file: QRScan.jsx:43 ~ QRScan ~ temp:', temp);
+  console.log('isPaid: ', isPaid);
+
+  Modal.destroyAll();
   return (
-    <Row
-      style={{
-        margin: '2rem auto',
-        border: '1px solid #ddd',
-        borderRadius: '10px',
-        maxWidth: '750px',
-      }}
-    >
-      <Col span={8}>
-        <Row>
-          <Col span={24}>
-            <Space
-              direction='vertical'
+    <Fragment>
+      <Row
+        style={{
+          margin: '2rem auto',
+          border: '1px solid #ddd',
+          borderRadius: '10px',
+          maxWidth: '750px',
+        }}
+      >
+        <Col span={8}>
+          <Row>
+            <Col span={24}>
+              <Space
+                direction='vertical'
+                style={{
+                  display: 'flex',
+                  background: cardObj.cardColor,
+                  color: '#fff',
+                  borderTopLeftRadius: '10px',
+                  borderBottomLeftRadius: '10px',
+                  height: '100%',
+                }}
+              >
+                <div
+                  style={{
+                    ...leftStyle,
+                    padding: '1.5rem 0 1rem .7rem',
+                    borderBottom: '1px solid #aaa',
+                  }}
+                >
+                  <Typography.Text
+                    type='secondary'
+                    style={{ color: '#fff', fontSize: '1.1rem' }}
+                  >
+                    Đơn hàng hết hạn sau
+                  </Typography.Text>
+                  <Typography.Text
+                    style={{ fontSize: '1.5rem', color: '#fff' }}
+                  >
+                    {temp}
+                  </Typography.Text>
+                </div>
+                <div style={{ ...leftStyle, padding: '1rem 0 1rem .7rem' }}>
+                  <Typography.Text
+                    type='secondary'
+                    style={{
+                      fontSize: '0.8rem',
+                      color: '#ddd',
+                    }}
+                  >
+                    Nhà cung cấp
+                  </Typography.Text>
+                  <Typography.Text
+                    style={{
+                      color: '#fff',
+                      fontSize: '1.2rem',
+                    }}
+                  >
+                    CGV
+                  </Typography.Text>
+                </div>
+                <hr />
+                <div style={{ ...leftStyle, padding: '1rem 0 1rem .7rem' }}>
+                  <Typography.Text
+                    type='secondary'
+                    style={{ fontSize: '0.8rem', color: '#ddd' }}
+                  >
+                    Số tiền
+                  </Typography.Text>
+                  <Typography.Text
+                    style={{ color: '#fff', fontSize: '1.2rem' }}
+                  >
+                    {state.totalMoney} VND
+                  </Typography.Text>
+                </div>
+                <hr />
+                <div
+                  style={{
+                    ...leftStyle,
+                    padding: '1rem 0 2rem .7rem',
+                    color: '#fff',
+                    fontSize: '0.8rem',
+                  }}
+                >
+                  <Typography.Text
+                    type='secondary'
+                    style={{ fontSize: '0.8rem', color: '#ddd' }}
+                  >
+                    Đơn hàng
+                  </Typography.Text>
+                  <Typography.Text
+                    style={{ color: '#fff', fontSize: '1.2rem' }}
+                  >
+                    123
+                  </Typography.Text>
+                </div>
+              </Space>
+            </Col>
+          </Row>
+        </Col>
+        <Col span={16} style={{ padding: '1rem' }}>
+          <div>
+            <div
               style={{
                 display: 'flex',
-                background: cardObj.cardColor,
-                color: '#fff',
-                borderTopLeftRadius: '10px',
-                borderBottomLeftRadius: '10px',
-                height: '100%',
+                alignItems: 'center',
+                justifyContent: 'space-between',
               }}
             >
-              <div
-                style={{
-                  ...leftStyle,
-                  padding: '1.5rem 0 1rem .7rem',
-                  borderBottom: '1px solid #aaa',
-                }}
-              >
-                <Typography.Text
-                  type='secondary'
-                  style={{ color: '#fff', fontSize: '1.1rem' }}
-                >
-                  Đơn hàng hết hạn sau
-                </Typography.Text>
-                <Typography.Text style={{ fontSize: '1.5rem', color: '#fff' }}>
-                  {temp}
-                </Typography.Text>
+              <div>
+                <img src={CGVImage} alt='CGV Icon' />
               </div>
-              <div style={{ ...leftStyle, padding: '1rem 0 1rem .7rem' }}>
-                <Typography.Text
-                  type='secondary'
-                  style={{
-                    fontSize: '0.8rem',
-                    color: '#ddd',
-                  }}
-                >
-                  Nhà cung cấp
-                </Typography.Text>
-                <Typography.Text
-                  style={{
-                    color: '#fff',
-                    fontSize: '1.2rem',
-                  }}
-                >
-                  CGV
-                </Typography.Text>
+              <div>
+                <img
+                  src={cardObj.cardImage}
+                  alt='MoMo Icon'
+                  style={imageStyle}
+                />
               </div>
-              <hr />
-              <div style={{ ...leftStyle, padding: '1rem 0 1rem .7rem' }}>
-                <Typography.Text
-                  type='secondary'
-                  style={{ fontSize: '0.8rem', color: '#ddd' }}
-                >
-                  Số tiền
-                </Typography.Text>
-                <Typography.Text style={{ color: '#fff', fontSize: '1.2rem' }}>
-                  {state.totalMoney} VND
-                </Typography.Text>
-              </div>
-              <hr />
-              <div
-                style={{
-                  ...leftStyle,
-                  padding: '1rem 0 2rem .7rem',
-                  color: '#fff',
-                  fontSize: '0.8rem',
-                }}
-              >
-                <Typography.Text
-                  type='secondary'
-                  style={{ fontSize: '0.8rem', color: '#ddd' }}
-                >
-                  Đơn hàng
-                </Typography.Text>
-                <Typography.Text style={{ color: '#fff', fontSize: '1.2rem' }}>
-                  123
-                </Typography.Text>
-              </div>
-            </Space>
-          </Col>
-        </Row>
-      </Col>
-      <Col span={16} style={{ padding: '1rem' }}>
-        <div>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            <div>
-              <img src={CGVImage} alt='CGV Icon' />
             </div>
-            <div>
-              <img src={cardObj.cardImage} alt='MoMo Icon' style={imageStyle} />
+            <Divider />
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                textAlign: 'center',
+              }}
+            >
+              <Typography.Title level={3} style={{ marginBottom: '2rem' }}>
+                Quét mã để thanh toán
+              </Typography.Title>
+              <QRCode value={'http://localhost:8080/api/qrcode/1'} />
+              <Typography.Paragraph style={{ marginTop: '1.5rem' }}>
+                Sử dụng App{' '}
+                <Typography.Text strong>{cardObj.cardText}</Typography.Text>{' '}
+                hoặc <br />
+                ứng dụng Camera hỗ trợ QR code để quét mã
+              </Typography.Paragraph>
             </div>
           </div>
-          <Divider />
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              textAlign: 'center',
-            }}
-          >
-            <Typography.Title level={3} style={{ marginBottom: '2rem' }}>
-              Quét mã để thanh toán
-            </Typography.Title>
-            <QRCode value={'http://localhost:8080/api/qrcode/1'} />
-            <Typography.Paragraph style={{ marginTop: '1.5rem' }}>
-              Sử dụng App{' '}
-              <Typography.Text strong>{cardObj.cardText}</Typography.Text> hoặc{' '}
-              <br />
-              ứng dụng Camera hỗ trợ QR code để quét mã
-            </Typography.Paragraph>
-          </div>
-        </div>
-      </Col>
-    </Row>
+        </Col>
+      </Row>
+    </Fragment>
   );
 };
 

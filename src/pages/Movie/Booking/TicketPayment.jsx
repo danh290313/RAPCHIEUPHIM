@@ -47,6 +47,7 @@ const TicketPayment = () => {
   } = useLocation();
   const { movieInfo, scheduleInfo } = state;
   const ticketSeats = useSelector(state => state.ticket.seats);
+  console.log('scheduleInfo', scheduleInfo);
   console.log(
     '🚀 ~ file: TicketPayment.jsx:24 ~ TicketPayment ~ ticketSeats:',
     ticketSeats
@@ -61,6 +62,7 @@ const TicketPayment = () => {
     // lưu lại đã chọn cách thanh toán nào vào redux
     ticketActions.addPaymentMethod(dispatch, paymentMethod);
     navigate('/movie/ticket-payment/qrcode', {
+      replace: true,
       state: { totalMoney: state.totalMoney },
     });
   };

@@ -155,6 +155,7 @@ const BookingSeat = props => {
     }
     ticketActions.addSeatsAction(dispatch, ticketSeats);
     navigate('/movie/ticket-payment', {
+      replace: true,
       state: { movieInfo, scheduleInfo, totalMoney },
     });
   };
