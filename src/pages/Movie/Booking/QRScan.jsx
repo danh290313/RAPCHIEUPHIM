@@ -143,7 +143,10 @@ const QRScan = () => {
 
   useEffect(() => {
     if (!isPaid) {
-      const intervalId = setInterval(fetchBillStatus.bind(null, 1), 3000);
+      const intervalId = setInterval(
+        fetchBillStatus.bind(null, state.billId),
+        3000
+      );
       return () => clearInterval(intervalId);
     }
   }, [isPaid]);
@@ -306,7 +309,7 @@ const QRScan = () => {
                   <Typography.Text
                     style={{ color: '#fff', fontSize: '1.2rem' }}
                   >
-                    123
+                    {state.billId}
                   </Typography.Text>
                 </div>
               </Space>
@@ -346,7 +349,9 @@ const QRScan = () => {
               <Typography.Title level={3} style={{ marginBottom: '2rem' }}>
                 Quét mã để thanh toán
               </Typography.Title>
-              <QRCode value={'http://localhost:8080/api/qrcode/1'} />
+              <QRCode
+                value={`http://192.168.1.15:8080/api/confirmPayment?billId=${state.billId}`}
+              />
               <div
                 className='mb-2'
                 style={{ width: '130px', marginTop: '35px' }}
