@@ -63,13 +63,14 @@ const failedPaidNavigateContent = (
 let invalid = false;
 
 const QRScan = () => {
-  const afterFiveMinutesFromNow = new Date().getTime() + 60000;
+  const afterFiveMinutesFromNow = new Date().getTime() + 120000;
   const [isPaid, setIsPaid] = useState(false);
   const [minutes, setMinutes] = useState('01');
   const [seconds, setSeconds] = useState('00');
   const [invalidateTime, setInvalidateTime] = useState(false);
 
   const { state } = useLocation();
+  console.log('billId: ', state);
 
   const paymentMethod = useSelector(state => state.ticket.paymentMethod);
 

@@ -21,6 +21,7 @@ import MomoCard from '~/assets/Images/momo.webp';
 import ZaloPay from '~/assets/Images/zalopay.png';
 import ShoppeePay from '~/assets/Images/shoppee.jpg';
 import * as ticketActions from '~/redux/actions/ticketActions';
+import ticketApi from '../../../api/ticketApi';
 
 const imgStyle = {
   width: '30px',
@@ -58,12 +59,25 @@ const TicketPayment = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const paymentHandler = e => {
+  const scheduleId = useSelector(state => state.ticket.scheduleID);
+  const accessToken = useSelector(state => state.auth.accessToken);
+  const seats = useSelector(state => state.ticket.seats);
+
+  const paymentHandler = async e => {
     // lưu lại đã chọn cách thanh toán nào vào redux
     ticketActions.addPaymentMethod(dispatch, paymentMethod);
+
+    const listSeats = seats?.map(item => {
+      return { scheduleId, seatId: item.id };
+    });
+
+    const data = await ticketApi.createBillFromSeats(listSeats, accessToken);
+    console.log('data: ', data);
+    const billId = data[0].id;
+    console.log('billId: ', billId);
     navigate('/movie/ticket-payment/qrcode', {
       replace: true,
-      state: { totalMoney: state.totalMoney },
+      state: { totalMoney: state.totalMoney, billId },
     });
   };
   return (
