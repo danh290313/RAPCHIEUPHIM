@@ -52,30 +52,33 @@ const sucessfulPaidNavigateContent = (
     <Typography.Text>
       Bạn đã thanh toán thành công. Đang chuyển hướng đến danh sách các vé
     </Typography.Text>
-    <div style={{ textAlign: 'center' }}>
+    <div style={{ textAlign: 'center', marginTop: '10px' }}>
+      <Spin indicator={antIcon} />
+    </div>
+  </>
+);
+const failedPaidNavigateContent = (
+  <>
+    <Typography.Text>Mã QR đã hết hạn. Xin vui lòng đặt lại vé</Typography.Text>
+    <div style={{ textAlign: 'center', marginTop: '10px' }}>
       <Spin indicator={antIcon} />
     </div>
   </>
 );
 
+let invalid = false;
+
 const QRScan = () => {
   const afterFiveMinutesFromNow = new Date().getTime() + 300000;
   const [isPaid, setIsPaid] = useState(false);
-  const [minutes, setMinutes] = useState('00');
+  const [minutes, setMinutes] = useState('05');
   const [seconds, setSeconds] = useState('00');
+  const [invalidateTime, setInvalidateTime] = useState(false);
 
   const { state } = useLocation();
 
   const paymentMethod = useSelector(state => state.ticket.paymentMethod);
 
-  // destroy tất cả modal trước khi chuyển trang
-  const location = useLocation();
-  useEffect(() => {
-    Modal.destroyAll();
-  }, [location]);
-
-  console.log('typeof ', typeof paymentMethod);
-  console.log('payment method: ', paymentMethod);
   let cardObj = { cardImage: '', cardText: '', cardColor: '' };
   switch (paymentMethod) {
     case 1:
@@ -111,6 +114,9 @@ const QRScan = () => {
     if (isPaid) {
       return;
     }
+    if (invalidateTime) {
+      return;
+    }
     const now = new Date().getTime();
     const second = 1000;
     const minute = second * 60;
@@ -123,14 +129,13 @@ const QRScan = () => {
     if (Number(textMinute) < 0 && Number(textSecond) < 0) return;
     setMinutes(textMinute);
     setSeconds(textSecond);
-  }, [isPaid]);
+  }, [isPaid, invalidateTime]);
 
   useEffect(() => {
     const timeInterval = setInterval(countDown, 1000, 1000);
 
     return () => {
       clearInterval(timeInterval);
-      console.log('clearInterval: ', timeInterval);
     };
   }, [countDown]);
 
@@ -146,31 +151,36 @@ const QRScan = () => {
     if (!isPaid) {
       const intervalId = setInterval(fetchBillStatus.bind(null, 1), 3000);
       return () => clearInterval(intervalId);
-    } else {
     }
   }, [isPaid]);
 
   let temp;
   if (parseInt(minutes) <= 0 && parseInt(seconds) <= 0) {
     temp = '00:00';
-    // navigate trang vì đã hết hạn
+    invalid = true;
   } else {
     temp = `${minutes}:${seconds}`;
   }
 
   // Thông báo
   const navigate = useNavigate();
+  if (isPaid) {
+    message.success(sucessfulPaidNavigateContent, 5, () => {
+      navigate('/customer/profiledetails', { replace: true });
+    });
+  }
+
+  const movieId = useSelector(state => state.ticket.movieId);
   useEffect(() => {
-    if (isPaid) {
-      message.success(sucessfulPaidNavigateContent, 5, () => {
-        navigate('/customer/profiledetails', { replace: true });
+    if (invalid) {
+      invalid = false;
+      setInvalidateTime(true);
+      message.error(failedPaidNavigateContent, 5, () => {
+        navigate(`/movie/movie-detail/${movieId}`, { replace: true });
       });
     }
-  }, [isPaid, navigate]);
-  // console.log('🚀 ~ file: QRScan.jsx:43 ~ QRScan ~ temp:', temp);
-  console.log('isPaid: ', isPaid);
+  }, [invalid, navigate, movieId]);
 
-  Modal.destroyAll();
   return (
     <Fragment>
       <Row
@@ -306,6 +316,14 @@ const QRScan = () => {
                 Quét mã để thanh toán
               </Typography.Title>
               <QRCode value={'http://localhost:8080/api/qrcode/1'} />
+              <div
+                className='mb-2'
+                style={{ width: '130px', marginTop: '35px' }}
+              >
+                <Spin tip='Đang đợi quét mã'>
+                  <div className='content' />
+                </Spin>
+              </div>
               <Typography.Paragraph style={{ marginTop: '1.5rem' }}>
                 Sử dụng App{' '}
                 <Typography.Text strong>{cardObj.cardText}</Typography.Text>{' '}
