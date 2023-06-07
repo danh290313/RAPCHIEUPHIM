@@ -53,7 +53,7 @@ function FormLogin() {
                                 <Field label='Email hoặc số điện thoại ' name="username" component={InputField} placeholder="email" />
                             </div>
                             <div className={cx('w-full')}>
-                                <Field label='Mật khẩu' name="password" component={InputField} placeholder="password" />
+                                <Field label='Mật khẩu' type="password" name="password" component={InputField} placeholder="password" />
                             </div>
                 
                             <button type="submit" className={cx('btn-submit')}>

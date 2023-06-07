@@ -44,7 +44,7 @@ const antIcon = (
 const sucessfulPaidNavigateContent = (
   <>
     <Typography.Text>
-      Bạn đã thanh toán thành công. Đang chuyển hướng đến danh sách các vé
+      Bạn đã thanh toán thành công. Đang chuyển hướng về trang danh sách vé đã đặt.
     </Typography.Text>
     <div style={{ textAlign: 'center', marginTop: '10px' }}>
       <Spin indicator={antIcon} />
@@ -164,7 +164,7 @@ const QRScan = () => {
   const navigate = useNavigate();
   if (isPaid) {
     invalid = false;
-    message.success(sucessfulPaidNavigateContent, 3, () => {
+    message.success(sucessfulPaidNavigateContent, 4, () => {
       navigate('/customer/profiledetails', { replace: true });
     });
   }
@@ -351,7 +351,7 @@ const QRScan = () => {
                 Quét mã để thanh toán
               </Typography.Title>
               <QRCode
-                value={`http://192.168.1.15:8080/api/confirmPayment?billId=${state.billId}`}
+                value={`http://192.168.1.14:8080/api/confirmPayment?billId=${state.billId}`}
               />
               <div
                 className='mb-2'

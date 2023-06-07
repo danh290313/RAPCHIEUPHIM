@@ -31,7 +31,7 @@ export function HistoryTransaction() {
   const [search, setSearch] = useState(null);
   useEffect(() => {
     (async () => {
-      const res = await authApi.getHistory(2);
+      const res = await authApi.getHistory(userId);
       console.log(res);
       setHistory(res);
     })();
@@ -39,7 +39,7 @@ export function HistoryTransaction() {
 
   useEffect(() => {
     (async () => {
-      const res = await authApi.getHistorySearch(2, search);
+      const res = await authApi.getHistorySearch(userId, search);
       console.log({ res });
       setHistory(res);
     })();
